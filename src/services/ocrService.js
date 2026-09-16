@@ -47,11 +47,20 @@ function normalizeGeminiLines(payload) {
     .filter(Boolean);
 }
 
-async function runGeminiOcr(imagePaths) {
-  if (!config.ai.geminiApiKey) {
-    throw new Error('PaddleOCR is unavailable on this deployment and GEMINI_API_KEY is not configured for OCR fallback.');
-  }
+function normalizeOcrPayload(payload) {
+  const lines = normalizeGeminiLines(payload);
+  const confidenceValues = lines.map((line) => line.confidence).filter((value) => value > 0);
 
+  return {
+    text: String(payload.text || lines.map((line) => line.text).join('\n') || '').trim(),
+    averageConfidence: confidenceValues.length
+      ? confidenceValues.reduce((sum, value) => sum + value, 0) / confidenceValues.length
+      : 0,
+    lines
+  };
+}
+
+async function runGeminiOcr(imagePaths) {
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(config.ai.visionModel)}:generateContent?key=${encodeURIComponent(config.ai.geminiApiKey)}`;
 
   return Promise.all(imagePaths.map(async (imagePath) => {
@@ -89,19 +98,75 @@ async function runGeminiOcr(imagePaths) {
 
     const text = result.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('\n') || '';
     const payload = parseGeminiJson(text);
-    const lines = normalizeGeminiLines(payload);
-    const confidenceValues = lines.map((line) => line.confidence).filter((value) => value > 0);
+    const normalized = normalizeOcrPayload(payload);
 
     return {
       path: imagePath,
       engine: 'gemini-vision-fallback',
-      text: String(payload.text || lines.map((line) => line.text).join('\n') || '').trim(),
-      averageConfidence: confidenceValues.length
-        ? confidenceValues.reduce((sum, value) => sum + value, 0) / confidenceValues.length
-        : 0,
-      lines
+      ...normalized
     };
   }));
+}
+
+async function runOpenAiOcr(imagePaths) {
+  return Promise.all(imagePaths.map(async (imagePath) => {
+    const data = await fs.readFile(imagePath);
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.ai.openaiApiKey}`
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_VISION_MODEL || config.ai.openaiModel || 'gpt-4o-mini',
+        temperature: 0,
+        response_format: { type: 'json_object' },
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Perform OCR on this packaged commodity image. Return JSON only: {"text":"all detected text in reading order","lines":[{"text":"one detected line","confidence":0.0}]}. Do not invent text. If no text is readable, return empty text and an empty lines array.'
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: `data:${mimeTypeForFile(imagePath)};base64,${data.toString('base64')}`
+              }
+            }
+          ]
+        }]
+      })
+    });
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const message = result.error?.message || `OpenAI OCR failed with status ${response.status}`;
+      throw new Error(message);
+    }
+
+    const text = result.choices?.[0]?.message?.content || '';
+    const payload = parseGeminiJson(text);
+    const normalized = normalizeOcrPayload(payload);
+
+    return {
+      path: imagePath,
+      engine: 'openai-vision-fallback',
+      ...normalized
+    };
+  }));
+}
+
+async function runHostedOcrFallback(imagePaths) {
+  if (config.ai.geminiApiKey) {
+    return runGeminiOcr(imagePaths);
+  }
+
+  if (config.ai.openaiApiKey) {
+    return runOpenAiOcr(imagePaths);
+  }
+
+  throw new Error('Hosted OCR is unavailable: set GEMINI_API_KEY or OPENAI_API_KEY in Vercel Environment Variables, then redeploy.');
 }
 
 function runPaddleOcrOnly(imagePaths) {
@@ -150,14 +215,14 @@ function runPaddleOcrOnly(imagePaths) {
 
 async function runPaddleOcr(imagePaths) {
   if (process.env.VERCEL) {
-    return runGeminiOcr(imagePaths);
+    return runHostedOcrFallback(imagePaths);
   }
 
   try {
     return await runPaddleOcrOnly(imagePaths);
   } catch (error) {
     if (error && (error.code === 'ENOENT' || /ENOENT|python/i.test(error.message || ''))) {
-      return runGeminiOcr(imagePaths);
+      return runHostedOcrFallback(imagePaths);
     }
     throw error;
   }

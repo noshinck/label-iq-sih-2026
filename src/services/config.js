@@ -1,13 +1,23 @@
 require('dotenv').config();
 
-const aiProvider = process.env.AI_PROVIDER || (process.env.GEMINI_API_KEY ? 'gemini' : 'openai');
+const geminiApiKey = process.env.GEMINI_API_KEY ||
+  process.env.GEMINI_API ||
+  process.env.GEMINI_KEY ||
+  process.env.GOOGLE_API_KEY ||
+  process.env.GOOGLE_GEMINI_API_KEY ||
+  process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+  process.env.GOOGLE_GENAI_API_KEY ||
+  '';
+
+const aiProvider = process.env.AI_PROVIDER || (geminiApiKey ? 'gemini' : 'openai');
 
 module.exports = {
   ai: {
     provider: aiProvider,
-    apiKey: aiProvider === 'gemini' ? process.env.GEMINI_API_KEY || '' : process.env.OPENAI_API_KEY || '',
+    apiKey: aiProvider === 'gemini' ? geminiApiKey : process.env.OPENAI_API_KEY || '',
     openaiApiKey: process.env.OPENAI_API_KEY || '',
-    geminiApiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '',
+    geminiApiKey,
+    openaiModel: process.env.OPENAI_MODEL || 'gpt-4o-mini',
     model: aiProvider === 'gemini' ? process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite' : process.env.OPENAI_MODEL || 'gpt-4o-mini',
     visionModel: process.env.GEMINI_VISION_MODEL || process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite',
     embeddingModel: process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-small'
