@@ -1,18 +1,27 @@
 {
   "name": "labeliq-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "LabelIQ portal prototype for consumer, business, and legal compliance workflows.",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "check": "find src scripts -name '*.js' -o -name '*.py' | sort | xargs -I {} sh -c 'case \"{}\" in *.js) node --check \"{}\" ;; *.py) python3 -m py_compile \"{}\" ;; esac' && node --check server.js",
+    "ingest:legal": "node scripts/ingest_legal_documents.js",
+    "test": "npm run check"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "express-session": "^1.19.0",
+    "multer": "^2.4.0",
+    "openai": "^7.15.0",
+    "uuid": "^14.0.2"
   }
 }
