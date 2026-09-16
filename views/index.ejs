@@ -248,6 +248,16 @@
       setSelectedFiles(fileInput.files);
     });
 
+    async function readApiPayload(response) {
+      const text = await response.text();
+      if (!text) return {};
+      try {
+        return JSON.parse(text);
+      } catch (error) {
+        return { error: text };
+      }
+    }
+
     function renderPublicJob(job) {
       const order = ['UPLOADING', 'PREPROCESSING', 'OCR', 'EXTRACTION', 'LEGAL_RETRIEVAL', 'RULE_VALIDATION', 'EVIDENCE', 'COMPLETED'];
       const icon = (stage) => !stage ? '○' : (stage.status === 'COMPLETED' ? '✓' : (stage.status === 'RUNNING' ? '●' : (stage.status === 'FAILED' ? '!' : '○')));
@@ -269,7 +279,7 @@
 
     async function pollPublicJob(jobId) {
       const response = await fetch(`/api/analysis/jobs/${jobId}`);
-      const job = await response.json();
+      const job = await readApiPayload(response);
       if (!response.ok) throw new Error(job.error || 'Could not read analysis job.');
       renderPublicJob(job);
 
@@ -308,7 +318,7 @@
       try {
         const formData = new FormData(scanForm);
         const response = await fetch('/api/analysis/jobs', { method: 'POST', body: formData });
-        const payload = await response.json();
+        const payload = await readApiPayload(response);
         if (!response.ok) throw new Error(payload.error || 'Could not start analysis.');
         pollPublicJob(payload.job_id);
       } catch (error) {

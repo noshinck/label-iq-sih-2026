@@ -1,5 +1,6 @@
 const express = require('express');
 const authService = require('../services/authService');
+const sessionCookie = require('../services/sessionCookie');
 
 const router = express.Router();
 
@@ -35,6 +36,7 @@ router.post('/signin', async (req, res) => {
   }
 
   req.session.user = result.user;
+  sessionCookie.setUser(res, result.user);
 
   return redirectToPortal(res, result.user.role);
 });
@@ -62,16 +64,19 @@ router.post('/signup', async (req, res) => {
   if (!result.ok) return res.render('signup', { error: result.error, portal });
 
   req.session.user = result.user;
+  sessionCookie.setUser(res, result.user);
   return redirectToPortal(res, result.user.role);
 });
 
 router.post('/auth/demo/public', async (req, res) => {
   req.session.user = await authService.demoPublicUser();
+  sessionCookie.setUser(res, req.session.user);
   return res.redirect('/');
 });
 
 router.get('/signout', (req, res) => {
   const portal = getPortal(req.query.portal);
+  sessionCookie.clearUser(res);
 
   req.session.destroy(() => {
     res.redirect(`/signin?portal=${portal}`);

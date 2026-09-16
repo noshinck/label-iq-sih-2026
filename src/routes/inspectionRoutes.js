@@ -1,5 +1,7 @@
 const express = require('express');
+const fs = require('fs');
 const multer = require('multer');
+const os = require('os');
 const path = require('path');
 const checkPortalAuth = require('../middleware/checkPortalAuth');
 const analysisJobService = require('../services/analysisJobService');
@@ -7,10 +9,15 @@ const inspectionService = require('../services/inspectionService');
 const reportService = require('../services/reportService');
 
 const router = express.Router();
+const uploadDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'labeliq-uploads')
+  : path.join(__dirname, '..', '..', 'public', 'uploads');
+
+fs.mkdirSync(uploadDir, { recursive: true });
 
 const upload = multer({
   storage: multer.diskStorage({
-    destination: path.join(__dirname, '..', '..', 'public', 'uploads'),
+    destination: uploadDir,
     filename(req, file, cb) {
       const safeName = file.originalname.replace(/[^a-z0-9.\-_]/gi, '-').toLowerCase();
       cb(null, `${Date.now()}-${Math.round(Math.random() * 1e9)}-${safeName}`);
@@ -26,7 +33,17 @@ const upload = multer({
   }
 });
 
-router.post('/legal/inspections', checkPortalAuth('legal'), upload.array('photos', 6), async (req, res) => {
+function runUpload(req, res, next) {
+  upload.array('photos', 6)(req, res, (error) => {
+    if (!error) return next();
+    const message = error.code === 'LIMIT_FILE_SIZE'
+      ? 'Image is too large. Use a compressed image under 4 MB on the deployed app.'
+      : error.message;
+    return res.status(400).json({ error: message });
+  });
+}
+
+router.post('/legal/inspections', checkPortalAuth('legal'), runUpload, async (req, res) => {
   try {
     if (!req.files?.length) throw new Error('Please upload at least one product photo.');
     const imageTypes = Array.isArray(req.body.imageTypes) ? req.body.imageTypes : [req.body.imageTypes].filter(Boolean);
@@ -45,7 +62,7 @@ router.post('/legal/inspections', checkPortalAuth('legal'), upload.array('photos
   }
 });
 
-router.post('/legal/inspections/analyze-upload', checkPortalAuth('legal'), upload.array('photos', 6), async (req, res) => {
+router.post('/legal/inspections/analyze-upload', checkPortalAuth('legal'), runUpload, async (req, res) => {
   let created = null;
   try {
     if (!req.files?.length) throw new Error('Please upload at least one product photo.');
@@ -69,7 +86,7 @@ router.post('/legal/inspections/analyze-upload', checkPortalAuth('legal'), uploa
   }
 });
 
-router.post('/api/analysis/jobs', upload.array('photos', 6), async (req, res) => {
+router.post('/api/analysis/jobs', runUpload, async (req, res) => {
   try {
     if (!req.session?.user) return res.status(401).json({ error: 'Sign in required.' });
     if (!['legal', 'consumer', 'business'].includes(req.session.user.role)) return res.status(403).json({ error: 'Portal access denied.' });
@@ -134,7 +151,7 @@ router.post('/api/analysis/jobs/:id/retry', async (req, res) => {
   return res.json({ job_id: updated.id, status: updated.status, message: updated.message });
 });
 
-router.post('/scan/analyze-upload', checkPortalAuth('consumer'), upload.array('photos', 6), async (req, res) => {
+router.post('/scan/analyze-upload', checkPortalAuth('consumer'), runUpload, async (req, res) => {
   let created = null;
   try {
     if (!req.files?.length) throw new Error('Please upload at least one product photo.');

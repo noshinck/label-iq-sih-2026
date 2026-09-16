@@ -506,6 +506,16 @@
       }
     });
 
+    async function readApiPayload(response) {
+      const text = await response.text();
+      if (!text) return {};
+      try {
+        return JSON.parse(text);
+      } catch (error) {
+        return { error: text };
+      }
+    }
+
     function refreshSelectedImages() {
       selectedImagesBox.innerHTML = '';
       selectedImagesBox.classList.toggle('hidden', selectedImages.length === 0);
@@ -576,7 +586,7 @@
 
     async function pollJob(jobId) {
       const response = await fetch(`/api/analysis/jobs/${jobId}`);
-      const job = await response.json();
+      const job = await readApiPayload(response);
       if (!response.ok) throw new Error(job.error || 'Could not read analysis job.');
       renderJob(job);
 
@@ -623,7 +633,7 @@
           selectedImages.forEach((file) => formData.append('photos', file));
           selectedImagesBox.querySelectorAll('.role-select').forEach((select) => formData.append('imageTypes', select.value));
           const response = await fetch('/api/analysis/jobs', { method: 'POST', body: formData });
-          const payload = await response.json();
+          const payload = await readApiPayload(response);
           if (!response.ok) throw new Error(payload.error || 'Could not start analysis.');
           pollJob(payload.job_id);
         } catch (error) {
