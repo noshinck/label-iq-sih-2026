@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inspection Result - LabelIQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: { brand: { DEFAULT: '#4638d9', hover: '#3a2ec2' } }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#fcfdff] text-slate-700 antialiased font-sans min-h-screen">
+  <header class="w-full bg-white border-b border-slate-100 sticky top-0 z-50">
+    <div class="px-8 h-16 flex items-center justify-between">
+      <a href="/legal" class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-[#4638d9] flex items-center justify-center text-white">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="4" y1="6" x2="6" y2="6" />
+            <line x1="10" y1="6" x2="20" y2="6" />
+            <line x1="4" y1="12" x2="6" y2="12" />
+            <line x1="10" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="18" x2="6" y2="18" />
+            <line x1="10" y1="18" x2="20" y2="18" />
+          </svg>
+        </div>
+        <span class="text-xl font-bold text-slate-900 tracking-tight">LabelIQ</span>
+      </a>
+      <a href="/legal" class="px-4 py-2 rounded-lg border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Back to Officer Portal</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8">
+    <% if (error) { %>
+      <div class="mb-6 rounded-2xl border border-red-100 bg-red-50 px-5 py-4 text-sm text-red-700 font-medium">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <% if (!detail) { %>
+      <div class="bg-white border border-slate-200 rounded-2xl p-6">Inspection could not be loaded.</div>
+    <% } else { %>
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-mono text-slate-400"><%= detail.inspection.id %></p>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight mt-1">Compliance Result</h1>
+          <p class="text-sm text-slate-500 mt-1">Status: <%= detail.inspection.status %></p>
+        </div>
+        <div class="flex items-center gap-3">
+          <% if (detail.inspection.status === 'UPLOADED') { %>
+            <form action="/legal/inspections/<%= detail.inspection.id %>/analyze" method="POST">
+              <button class="px-5 py-2.5 rounded-xl bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-semibold text-sm shadow-sm">Analyze Product</button>
+            </form>
+          <% } %>
+          <% if (detail.inspection.status === 'ANALYZED') { %>
+            <form action="/legal/inspections/<%= detail.inspection.id %>/finalize" method="POST">
+              <button class="px-5 py-2.5 rounded-xl bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-semibold text-sm shadow-sm">Finalize Inspection</button>
+            </form>
+          <% } %>
+          <% if (detail.inspection.status === 'ANALYZED' || detail.inspection.status === 'FINALIZED') { %>
+            <a href="/legal/inspections/<%= detail.inspection.id %>/report.pdf" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50">PDF</a>
+            <a href="/legal/inspections/<%= detail.inspection.id %>/report.docx" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50">DOCX</a>
+          <% } %>
+        </div>
+      </div>
+
+      <% const resultClass = detail.inspection.result_status === 'POTENTIAL NON-COMPLIANCE' ? 'bg-[#fef2f2] text-[#dc2626]' : (detail.inspection.result_status === 'COMPLIANT' ? 'bg-[#ecfdf5] text-[#059669]' : 'bg-[#fffbeb] text-[#b45309]'); %>
+      <section class="mt-6 bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold <%= resultClass %>"><%= detail.inspection.result_status || 'NOT ANALYZED' %></span>
+            <% if (detail.declaration && detail.declaration.warning) { %>
+              <p class="text-xs text-amber-700 mt-3"><%= detail.declaration.warning %></p>
+            <% } %>
+          </div>
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div><p class="text-xl font-bold text-slate-900"><%= detail.checks.filter(check => check.status === 'passed').length %></p><p class="text-xs text-slate-400">Passed</p></div>
+            <div><p class="text-xl font-bold text-[#dc2626]"><%= detail.checks.filter(check => check.status === 'potential_non_compliance').length %></p><p class="text-xs text-slate-400">Potential Issues</p></div>
+            <div><p class="text-xl font-bold text-[#b45309]"><%= detail.checks.filter(check => check.status === 'needs_verification').length %></p><p class="text-xs text-slate-400">Needs Verification</p></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 mt-6">
+        <section class="space-y-4">
+          <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight">Extracted Declarations</h2>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <% const declarations = detail.declaration ? detail.declaration.declarations : {}; %>
+              <% Object.keys(declarations || {}).forEach(field => { %>
+                <div class="border border-slate-100 rounded-xl p-3">
+                  <p class="text-xs uppercase text-slate-400 font-bold"><%= field.replaceAll('_', ' ') %></p>
+                  <p class="text-sm text-slate-800 mt-1"><%= declarations[field] ? (Array.isArray(declarations[field]) ? declarations[field].join(', ') : declarations[field]) : 'Not Detected' %></p>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight">Checks Performed</h2>
+            <div class="mt-4 space-y-3">
+              <% detail.checks.forEach(check => { %>
+                <div class="border border-slate-100 rounded-2xl p-4">
+                  <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p class="text-sm font-bold text-slate-900"><%= check.what %></p>
+                      <p class="text-xs text-slate-500 mt-1"><%= check.why %></p>
+                      <p class="text-xs text-slate-400 mt-2">Rule: <%= check.rule %></p>
+                      <p class="text-xs text-slate-400 mt-1">Source: <%= check.source ? `${check.source}${check.page ? `, page ${check.page}` : ''}` : 'Source support unavailable - officer verification required.' %></p>
+                      <p class="text-xs text-slate-400 mt-1">Applicability: <%= check.applicability_reason || 'Officer verification required.' %></p>
+                      <p class="text-xs text-slate-400 mt-1">Confidence: <%= Math.round((check.confidence || 0) * 100) %>%</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold <%= check.status === 'passed' ? 'bg-[#ecfdf5] text-[#059669]' : (check.status === 'potential_non_compliance' ? 'bg-[#fef2f2] text-[#dc2626]' : 'bg-[#fffbeb] text-[#b45309]') %>">
+                      <%= check.status.replaceAll('_', ' ') %>
+                    </span>
+                  </div>
+
+                  <div class="mt-4 flex flex-wrap items-center gap-2">
+                    <button type="button" class="view-evidence px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50" data-evidence='<%- JSON.stringify(check.evidence || null) %>' data-field="<%= check.field %>">
+                      View Evidence
+                    </button>
+                  </div>
+
+                  <form action="/legal/checks/<%= check.id %>/verify" method="POST" class="mt-4 grid grid-cols-1 md:grid-cols-[160px_1fr_1fr_auto] gap-2">
+                    <select name="status" class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700">
+                      <option value="accepted">Accept</option>
+                      <option value="edited">Edit</option>
+                      <option value="rejected">Reject</option>
+                      <option value="needs_verification">Needs Verification</option>
+                    </select>
+                    <input name="correctedValue" placeholder="Officer corrected value" class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700" />
+                    <input name="remark" placeholder="Remark" class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700" />
+                    <button class="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold">Save</button>
+                  </form>
+
+                  <% if (check.officer_status) { %>
+                    <p class="text-xs text-slate-400 mt-3">Officer: <%= check.officer_status %> <%= check.officer_corrected_value ? `- ${check.officer_corrected_value}` : '' %></p>
+                  <% } %>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+
+        <aside class="space-y-4">
+          <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight">Evidence</h2>
+            <div id="evidence-empty" class="mt-4 text-sm text-slate-500">Click View Evidence on any finding.</div>
+            <div id="evidence-panel" class="hidden mt-4">
+              <p id="evidence-title" class="text-sm font-bold text-slate-900"></p>
+              <p id="evidence-copy" class="text-xs text-slate-500 mt-1"></p>
+              <div id="evidence-image-wrap" class="relative mt-3 border border-slate-100 rounded-xl overflow-hidden bg-slate-50">
+                <img id="evidence-image" class="w-full block" alt="Evidence image" />
+                <div id="evidence-box" class="absolute border-2 border-red-500 bg-red-500/10 hidden"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight">Uploaded Images</h2>
+            <div class="mt-4 space-y-3">
+              <% detail.images.forEach(image => { %>
+                <div class="border border-slate-100 rounded-xl p-3">
+                  <img src="<%= image.public_path %>" class="w-full rounded-lg border border-slate-100" alt="<%= image.role %>" />
+                  <p class="text-xs font-semibold text-slate-700 mt-2"><%= image.role %></p>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </aside>
+      </div>
+    <% } %>
+  </main>
+
+  <script>
+    const evidenceEmpty = document.getElementById('evidence-empty');
+    const evidencePanel = document.getElementById('evidence-panel');
+    const evidenceTitle = document.getElementById('evidence-title');
+    const evidenceCopy = document.getElementById('evidence-copy');
+    const evidenceImage = document.getElementById('evidence-image');
+    const evidenceBox = document.getElementById('evidence-box');
+
+    document.querySelectorAll('.view-evidence').forEach((button) => {
+      button.addEventListener('click', () => {
+        const evidence = JSON.parse(button.dataset.evidence || 'null');
+        evidenceEmpty.classList.add('hidden');
+        evidencePanel.classList.remove('hidden');
+        evidenceTitle.textContent = button.dataset.field.replaceAll('_', ' ');
+
+        if (!evidence) {
+          evidenceCopy.textContent = 'This declaration was not detected in the OCR text. Review the uploaded images manually.';
+          evidenceImage.removeAttribute('src');
+          evidenceBox.classList.add('hidden');
+          return;
+        }
+
+        evidenceCopy.textContent = `${evidence.text} (${Math.round((evidence.confidence || 0) * 100)}% OCR confidence)`;
+        evidenceImage.src = evidence.imagePath.replace(/^.*public/, '');
+        evidenceImage.onload = () => {
+          const naturalWidth = evidenceImage.naturalWidth || evidenceImage.width;
+          const naturalHeight = evidenceImage.naturalHeight || evidenceImage.height;
+          const scaleX = evidenceImage.clientWidth / naturalWidth;
+          const scaleY = evidenceImage.clientHeight / naturalHeight;
+          evidenceBox.style.left = `${evidence.bounds.x * scaleX}px`;
+          evidenceBox.style.top = `${evidence.bounds.y * scaleY}px`;
+          evidenceBox.style.width = `${evidence.bounds.width * scaleX}px`;
+          evidenceBox.style.height = `${evidence.bounds.height * scaleY}px`;
+          evidenceBox.classList.remove('hidden');
+        };
+      });
+    });
+  </script>
+</body>
+</html>
