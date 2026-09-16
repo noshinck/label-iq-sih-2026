@@ -15,9 +15,9 @@
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
             ink: '#101828',
-            plum: '#e83ea9',
-            sunset: '#ffd84d',
-            citrus: '#fff5c7',
+            plum: '#2563eb',
+            sunset: '#38bdf8',
+            citrus: '#e0f2fe',
             trust: '#12a36f',
             navy: '#0f3564'
           }
@@ -32,11 +32,11 @@
     .hero-wash {
       background:
         radial-gradient(circle at 80% 16%, rgba(255, 255, 255, .78), transparent 22%),
-        radial-gradient(circle at 76% 78%, rgba(232, 62, 169, .22), transparent 24%),
-        linear-gradient(135deg, #ffe4df 0%, #fff2a8 53%, #ffd337 100%);
+        radial-gradient(circle at 76% 78%, rgba(37, 99, 235, .20), transparent 24%),
+        linear-gradient(135deg, #dbeafe 0%, #e0f2fe 52%, #60a5fa 100%);
     }
-    .pink-glow {
-      background: radial-gradient(circle, rgba(232, 62, 169, .42), transparent 58%);
+    .blue-glow {
+      background: radial-gradient(circle, rgba(56, 189, 248, .36), transparent 58%);
       filter: blur(18px);
     }
     .product-shadow { filter: drop-shadow(0 26px 24px rgba(16, 24, 40, .18)); }
@@ -70,7 +70,7 @@
 
         <div class="flex items-center gap-2">
           <a href="/signin" class="hidden rounded-full px-4 py-2 text-xs font-black text-ink hover:bg-slate-100 sm:inline-flex">Sign in</a>
-          <a href="/public/login" class="rounded-full bg-plum px-4 py-2 text-xs font-black text-white shadow-lg shadow-pink-300/40 hover:bg-[#d92a99]">Scan now</a>
+          <a href="/public/login" class="rounded-full bg-plum px-4 py-2 text-xs font-black text-white shadow-lg shadow-blue-300/40 hover:bg-[#1d4ed8]">Scan now</a>
         </div>
       </div>
     </div>
@@ -92,11 +92,11 @@
             </p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="/public/login" class="inline-flex justify-center rounded-full bg-plum px-6 py-3 text-sm font-black text-white shadow-xl shadow-pink-400/30 hover:bg-[#d92a99]">Start consumer scan</a>
+              <a href="/public/login" class="inline-flex justify-center rounded-full bg-plum px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-400/30 hover:bg-[#1d4ed8]">Start consumer scan</a>
               <a href="/officer/login" class="inline-flex justify-center rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-black text-ink hover:border-black/20">Officer portal</a>
             </div>
 
-            <div class="mt-8 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-xl shadow-orange-300/20 backdrop-blur">
+            <div class="mt-8 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-xl shadow-blue-300/20 backdrop-blur">
               <div class="flex items-start gap-3">
                 <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-plum to-sunset"></div>
                 <p class="text-sm leading-6 text-slate-700">
@@ -107,8 +107,8 @@
           </div>
 
           <div class="relative min-h-[520px]">
-            <div class="pink-glow absolute -bottom-10 left-20 h-52 w-72"></div>
-            <div class="tilt-card absolute right-0 top-12 w-[78%] rounded-[26px] border border-white/80 bg-white p-5 shadow-2xl shadow-orange-300/40">
+            <div class="blue-glow absolute -bottom-10 left-20 h-52 w-72"></div>
+            <div class="tilt-card absolute right-0 top-12 w-[78%] rounded-[26px] border border-white/80 bg-white p-5 shadow-2xl shadow-blue-300/40">
               <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <p class="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Inspection preview</p>
@@ -184,7 +184,7 @@
     <section id="features" class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
       <div class="space-y-8">
         <div class="grid items-center gap-8 rounded-[28px] border soft-border bg-white p-6 shadow-sm md:grid-cols-[.95fr_1.05fr] md:p-10">
-          <div class="rounded-3xl bg-gradient-to-br from-citrus to-white p-6 shadow-xl shadow-yellow-200/30">
+          <div class="rounded-3xl bg-gradient-to-br from-citrus to-white p-6 shadow-xl shadow-sky-200/40">
             <div class="grid grid-cols-2 gap-3">
               <% ['Product name', 'Manufacturer', 'MRP', 'Net quantity', 'Country', 'Consumer care'].forEach(item => { %>
                 <div class="rounded-2xl bg-white/90 p-4 text-sm font-black text-slate-700 shadow-sm"><%= item %></div>
