@@ -143,6 +143,17 @@
 
         <!-- Sidebar Navigation -->
         <nav class="space-y-1 pt-2">
+          <a href="/legal?section=complaints#new-inspection" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] border border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold hover:bg-emerald-100 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 7V5a1 1 0 0 1 1-1h2"></path>
+              <path d="M17 4h2a1 1 0 0 1 1 1v2"></path>
+              <path d="M20 17v2a1 1 0 0 1-1 1h-2"></path>
+              <path d="M7 20H5a1 1 0 0 1-1-1v-2"></path>
+              <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+            </svg>
+            <span>New Inspection Scan</span>
+          </a>
+
           <a href="/legal?section=complaints" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] <%= activeSection === 'complaints' ? activeNav : idleNav %>">
             <span>Submitted Complaints</span>
             <% if (data.navCounts.complaints) { %>
@@ -183,15 +194,27 @@
     <main class="flex-1 px-10 py-8 overflow-y-auto max-w-5xl">
       
       <!-- Page Title -->
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900 tracking-tight"><%= title[0] %></h1>
-        <p class="text-sm text-slate-500 mt-1"><%= title[1] %></p>
-        <p class="text-xs text-slate-400 mt-1">Database: <%= data.databaseMode %></p>
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight"><%= title[0] %></h1>
+          <p class="text-sm text-slate-500 mt-1"><%= title[1] %></p>
+          <p class="text-xs text-slate-400 mt-1">Database: <%= data.databaseMode %></p>
+        </div>
+        <a href="/legal?section=complaints#new-inspection" class="hidden sm:flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 7V5a1 1 0 0 1 1-1h2"></path>
+            <path d="M17 4h2a1 1 0 0 1 1 1v2"></path>
+            <path d="M20 17v2a1 1 0 0 1-1 1h-2"></path>
+            <path d="M7 20H5a1 1 0 0 1-1-1v-2"></path>
+            <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+          </svg>
+          Field Inspection Scan
+        </a>
       </div>
 
       <!-- New Inspection -->
       <% if (activeSection === 'complaints') { %>
-      <section class="mt-8 bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+      <section id="new-inspection" class="mt-8 bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
         <div class="flex items-start justify-between gap-4">
           <div>
             <h2 class="text-lg font-bold text-slate-900 tracking-tight">New Inspection</h2>

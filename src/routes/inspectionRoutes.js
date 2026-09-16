@@ -118,7 +118,9 @@ router.get('/api/analysis/jobs/:id', async (req, res) => {
   if (!job) return res.status(404).json({ error: 'Analysis job not found.' });
   if (job.actor_user_id !== req.session.user.id && req.session.user.role !== 'admin') return res.status(403).json({ error: 'Portal access denied.' });
 
-  const resultBase = req.session.user.role === 'consumer' ? '/scan/inspections' : '/legal/inspections';
+  const resultBase = req.session.user.role === 'consumer'
+    ? '/scan/inspections'
+    : (req.session.user.role === 'business' ? '/business/inspections' : '/legal/inspections');
   return res.json({
     job_id: job.id,
     inspection_id: job.inspection_id,
@@ -175,6 +177,12 @@ router.post('/scan/analyze-upload', checkPortalAuth('consumer'), runUpload, asyn
 });
 
 router.get('/scan/inspections/:id', checkPortalAuth('consumer'), async (req, res) => {
+  const detail = await inspectionService.getInspectionDetail(req.params.id);
+  if (!detail) return res.status(404).send('Inspection not found');
+  return res.render('inspection-detail', { detail, error: req.query.error || null });
+});
+
+router.get('/business/inspections/:id', checkPortalAuth('business'), async (req, res) => {
   const detail = await inspectionService.getInspectionDetail(req.params.id);
   if (!detail) return res.status(404).send('Inspection not found');
   return res.render('inspection-detail', { detail, error: req.query.error || null });

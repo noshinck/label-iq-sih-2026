@@ -115,7 +115,7 @@
         <!-- Navigation Links -->
         <nav class="space-y-1">
           <!-- Active Tab: Overview -->
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#f5f6ff] text-[#4638d9] font-semibold text-[14px]">
+          <a href="#overview" data-business-nav="Overview" class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#f5f6ff] text-[#4638d9] font-semibold text-[14px]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7" rx="1"></rect>
               <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -125,7 +125,7 @@
             Overview
           </a>
 
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
+          <a href="#product-catalog" data-business-nav="Product Catalog" class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <rect x="3" y="4" width="18" height="16" rx="2"></rect>
               <line x1="7" y1="8" x2="17" y2="8"></line>
@@ -134,14 +134,25 @@
             Product Catalog
           </a>
 
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
+          <a href="#artwork-precheck" data-open-business-scan data-mode="Artwork Pre-Check" class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             Artwork Pre-Check
           </a>
 
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
+          <a href="#scan-commodity" data-open-business-scan data-mode="Scan Commodity" class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 7V5a1 1 0 0 1 1-1h2"></path>
+              <path d="M17 4h2a1 1 0 0 1 1 1v2"></path>
+              <path d="M20 17v2a1 1 0 0 1-1 1h-2"></path>
+              <path d="M7 20H5a1 1 0 0 1-1-1v-2"></path>
+              <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+            </svg>
+            Scan Commodity
+          </a>
+
+          <a href="#batch-audits" data-business-notice="Batch audit history is shown in the product table. Use search or export to review the current audit set." class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <line x1="4" y1="6" x2="20" y2="6"></line>
               <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -150,7 +161,7 @@
             Batch Audits
           </a>
 
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
+          <a href="#correction-history" data-business-notice="Correction history is audit-ready. Open a scanned inspection result to accept, edit, reject, or add remarks to extracted fields." class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
@@ -158,7 +169,7 @@
             Correction History
           </a>
 
-          <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
+          <a href="#settings" data-business-notice="Business settings are connected to the signed-in portal session and company profile." class="business-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -188,14 +199,28 @@
           <p class="text-sm text-slate-500 mt-1">Batch audit dashboard — <%= data.company.name %> Pvt. Ltd.</p>
         </div>
 
-        <button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-semibold text-sm shadow-sm transition-colors">
-          <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Artwork Pre-Check
-        </button>
+        <div class="flex flex-wrap items-center justify-end gap-3">
+          <button data-open-business-scan data-mode="Scan Label" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-semibold text-sm shadow-sm transition-colors">
+            <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M4 7V5a1 1 0 0 1 1-1h2"></path>
+              <path d="M17 4h2a1 1 0 0 1 1 1v2"></path>
+              <path d="M20 17v2a1 1 0 0 1-1 1h-2"></path>
+              <path d="M7 20H5a1 1 0 0 1-1-1v-2"></path>
+              <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+            </svg>
+            Scan Label
+          </button>
+          <button data-open-business-scan data-mode="Artwork Pre-Check" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-semibold text-sm shadow-sm transition-colors">
+            <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Artwork Pre-Check
+          </button>
+        </div>
       </div>
+
+      <div id="business-notice" class="hidden mt-5 rounded-2xl border border-indigo-100 bg-indigo-50/60 px-4 py-3 text-sm text-[#4338CA] font-medium"></div>
 
       <!-- 4 Stats Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
@@ -226,7 +251,7 @@
       </div>
 
       <!-- Table Container -->
-      <div class="mt-8 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
+      <div id="product-catalog" class="mt-8 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
         
         <!-- Search & Export Bar -->
         <div class="p-5 flex flex-wrap items-center justify-between gap-4">
@@ -236,6 +261,7 @@
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <input 
+              id="business-product-search"
               type="text" 
               placeholder="Search products..." 
               class="w-full pl-10 pr-8 py-2 border border-slate-200 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-400"
@@ -244,8 +270,8 @@
           </div>
 
           <div class="flex items-center gap-4">
-            <span class="text-xs text-slate-400 font-medium">7 products</span>
-            <button class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-xs">
+            <span id="business-product-count" class="text-xs text-slate-400 font-medium"><%= data.products.length %> products</span>
+            <button id="business-export-csv" class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-xs">
               Export CSV
             </button>
           </div>
@@ -266,7 +292,7 @@
             </thead>
             <tbody class="divide-y divide-slate-100">
               <% data.products.forEach(item => { %>
-                <tr class="hover:bg-slate-50/70 transition-colors">
+                <tr class="business-product-row hover:bg-slate-50/70 transition-colors cursor-pointer" data-search="<%= [item.name, item.category, item.sku, item.type, item.destination, item.status].join(' ').toLowerCase() %>" data-product="<%= item.name %>" data-sku="<%= item.sku %>" data-status="<%= item.status %>">
                   <td class="py-4 px-6">
                     <p class="font-bold text-slate-800 text-[13px]"><%= item.name %></p>
                     <p class="text-slate-400 mt-0.5"><%= item.category %></p>
@@ -326,12 +352,254 @@
     </main>
   </div>
 
+  <div id="business-scan-modal" class="hidden fixed inset-0 z-[60] bg-slate-900/45 backdrop-blur-sm px-4 py-8 overflow-y-auto">
+    <div class="mx-auto mt-12 w-full max-w-xl rounded-3xl bg-white shadow-2xl shadow-slate-900/20">
+      <div class="p-8">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 id="business-scan-title" class="text-xl font-bold text-slate-900">Scan Packaging Label</h2>
+            <p id="business-scan-subtitle" class="mt-1 text-sm text-slate-400">Upload package photos for OCR, declarations, rules, and evidence.</p>
+          </div>
+          <button id="business-scan-close" type="button" class="text-slate-400 hover:text-slate-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <label id="business-dropzone" class="mt-7 block cursor-pointer rounded-2xl border-2 border-dashed border-indigo-200 bg-[#f8faff] px-6 py-10 text-center hover:border-[#4638d9] transition-colors">
+          <input id="business-scan-files" type="file" accept="image/*" multiple class="hidden" />
+          <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eef2ff] text-[#4638d9]">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 7V5a1 1 0 0 1 1-1h2"></path>
+              <path d="M17 4h2a1 1 0 0 1 1 1v2"></path>
+              <path d="M20 17v2a1 1 0 0 1-1 1h-2"></path>
+              <path d="M7 20H5a1 1 0 0 1-1-1v-2"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </span>
+          <span id="business-file-summary" class="mt-4 block text-sm font-semibold text-slate-800">Click to upload front/back package photos</span>
+          <span class="mt-1 block text-xs text-slate-400">Supports JPG, PNG, and WEBP images up to 25MB per file</span>
+        </label>
+
+        <div class="mt-6">
+          <label for="business-category" class="text-xs font-bold uppercase tracking-wider text-slate-500">Commodity type / category</label>
+          <select id="business-category" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 focus:outline-none focus:border-[#4638d9]">
+            <option>Food & Beverages</option>
+            <option>Cosmetics</option>
+            <option>Medical</option>
+            <option>Household</option>
+            <option>Textiles</option>
+          </select>
+        </div>
+
+        <div id="business-scan-status" class="hidden mt-5 rounded-xl border border-indigo-100 bg-indigo-50/60 px-4 py-3 text-sm text-[#4338CA] font-medium"></div>
+
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button id="business-scan-cancel" type="button" class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+          <button id="business-scan-submit" type="button" class="rounded-xl bg-[#4638d9] px-4 py-3 text-sm font-semibold text-white hover:bg-[#3a2ec2] disabled:opacity-50" disabled>
+            Run Compliance Scan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <%- include('partials/assistant-widget') %>
 
   <script>
+    const businessProducts = <%- JSON.stringify(data.products).replace(/</g, '\\u003c') %>;
     const portalBtn = document.getElementById('portal-btn');
     const portalDropdown = document.getElementById('portal-dropdown');
     const dropdownChevron = document.getElementById('dropdown-chevron');
+    const productSearch = document.getElementById('business-product-search');
+    const productCount = document.getElementById('business-product-count');
+    const productRows = Array.from(document.querySelectorAll('.business-product-row'));
+    const exportCsvButton = document.getElementById('business-export-csv');
+    const businessNotice = document.getElementById('business-notice');
+    const scanModal = document.getElementById('business-scan-modal');
+    const scanTitle = document.getElementById('business-scan-title');
+    const scanSubtitle = document.getElementById('business-scan-subtitle');
+    const scanFileInput = document.getElementById('business-scan-files');
+    const scanFileSummary = document.getElementById('business-file-summary');
+    const scanStatus = document.getElementById('business-scan-status');
+    const scanSubmit = document.getElementById('business-scan-submit');
+    const scanClose = document.getElementById('business-scan-close');
+    const scanCancel = document.getElementById('business-scan-cancel');
+    const scanFiles = [];
+
+    function showBusinessNotice(message) {
+      businessNotice.textContent = message;
+      businessNotice.classList.remove('hidden');
+      businessNotice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function setActiveBusinessNav(link) {
+      document.querySelectorAll('.business-nav-link').forEach((item) => {
+        item.classList.remove('bg-[#f5f6ff]', 'text-[#4638d9]', 'font-semibold');
+        item.classList.add('text-slate-600', 'font-medium');
+      });
+      if (!link) return;
+      link.classList.add('bg-[#f5f6ff]', 'text-[#4638d9]', 'font-semibold');
+      link.classList.remove('text-slate-600', 'font-medium');
+    }
+
+    function openBusinessScan(mode = 'Scan Label') {
+      scanTitle.textContent = mode === 'Artwork Pre-Check' ? 'Artwork Pre-Check' : 'Scan Packaging Label';
+      scanSubtitle.textContent = mode === 'Artwork Pre-Check'
+        ? 'Upload artwork or label images to screen mandatory declarations before packaging release.'
+        : 'Enterprise package scan - OCR, declarations, rules, and evidence.';
+      scanStatus.classList.add('hidden');
+      scanStatus.textContent = '';
+      scanModal.classList.remove('hidden');
+    }
+
+    function closeBusinessScan() {
+      scanModal.classList.add('hidden');
+    }
+
+    function refreshScanFiles() {
+      scanSubmit.disabled = scanFiles.length === 0;
+      if (!scanFiles.length) {
+        scanFileSummary.textContent = 'Click to upload front/back package photos';
+        return;
+      }
+      scanFileSummary.textContent = `${scanFiles.length} selected: ${scanFiles.map((file) => file.name).join(', ')}`;
+    }
+
+    async function readApiPayload(response) {
+      const text = await response.text();
+      if (!text) return {};
+      try {
+        return JSON.parse(text);
+      } catch (error) {
+        return { error: text };
+      }
+    }
+
+    function renderBusinessJob(job) {
+      scanStatus.classList.remove('hidden');
+      scanStatus.innerHTML = `
+        <div class="flex items-center justify-between gap-3">
+          <span>${job.message || 'Processing package images...'}</span>
+          <span>${job.progress || 0}%</span>
+        </div>
+        ${job.error ? `<p class="mt-2 text-xs font-semibold text-red-600">${job.error}</p>` : ''}
+      `;
+    }
+
+    async function pollBusinessJob(jobId) {
+      const response = await fetch(`/api/analysis/jobs/${jobId}`);
+      const job = await readApiPayload(response);
+      if (!response.ok) throw new Error(job.error || 'Could not read analysis job.');
+      renderBusinessJob(job);
+      if (job.status === 'COMPLETED') {
+        window.location.href = job.result_url;
+        return;
+      }
+      if (job.status === 'FAILED' || job.status === 'CANCELLED') {
+        scanSubmit.disabled = false;
+        return;
+      }
+      setTimeout(() => pollBusinessJob(jobId), 1500);
+    }
+
+    document.querySelectorAll('[data-open-business-scan]').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        setActiveBusinessNav(event.currentTarget.closest('.business-nav-link'));
+        openBusinessScan(event.currentTarget.dataset.mode || 'Scan Label');
+      });
+    });
+
+    document.querySelectorAll('[data-business-notice]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        setActiveBusinessNav(event.currentTarget);
+        showBusinessNotice(event.currentTarget.dataset.businessNotice);
+      });
+    });
+
+    document.querySelector('[data-business-nav="Product Catalog"]')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      setActiveBusinessNav(event.currentTarget);
+      document.getElementById('product-catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      productSearch?.focus();
+    });
+
+    scanFileInput.addEventListener('change', (event) => {
+      scanFiles.splice(0, scanFiles.length, ...Array.from(event.target.files).filter((file) => file.type.startsWith('image/')).slice(0, 6));
+      refreshScanFiles();
+    });
+
+    scanClose.addEventListener('click', closeBusinessScan);
+    scanCancel.addEventListener('click', closeBusinessScan);
+    scanModal.addEventListener('click', (event) => {
+      if (event.target === scanModal) closeBusinessScan();
+    });
+
+    scanSubmit.addEventListener('click', async () => {
+      if (!scanFiles.length) return;
+      scanSubmit.disabled = true;
+      scanStatus.classList.remove('hidden');
+      scanStatus.textContent = 'Uploading package images...';
+      try {
+        const formData = new FormData();
+        scanFiles.forEach((file) => {
+          formData.append('photos', file);
+          formData.append('imageTypes', 'business-label');
+        });
+        formData.append('category', document.getElementById('business-category').value);
+        const response = await fetch('/api/analysis/jobs', { method: 'POST', body: formData });
+        const payload = await readApiPayload(response);
+        if (!response.ok) throw new Error(payload.error || 'Could not start scan.');
+        pollBusinessJob(payload.job_id);
+      } catch (error) {
+        scanStatus.textContent = error.message;
+        scanSubmit.disabled = false;
+      }
+    });
+
+    productSearch.addEventListener('input', () => {
+      const query = productSearch.value.trim().toLowerCase();
+      let visibleCount = 0;
+      productRows.forEach((row) => {
+        const match = row.dataset.search.includes(query);
+        row.classList.toggle('hidden', !match);
+        if (match) visibleCount += 1;
+      });
+      productCount.textContent = `${visibleCount} product${visibleCount === 1 ? '' : 's'}`;
+    });
+
+    productRows.forEach((row) => {
+      row.addEventListener('click', () => {
+        showBusinessNotice(`${row.dataset.product} (${row.dataset.sku}) is currently marked ${row.dataset.status}. Run a fresh scan to generate OCR evidence and a rule-based inspection result.`);
+      });
+    });
+
+    exportCsvButton.addEventListener('click', () => {
+      const headers = ['Product', 'Category', 'SKU', 'Type', 'Destination', 'Last Checked', 'Status', 'Flags'];
+      const rows = businessProducts.map((item) => [
+        item.name,
+        item.category,
+        item.sku,
+        item.type,
+        item.destination,
+        item.lastChecked,
+        item.status,
+        item.flagCount || ''
+      ]);
+      const csv = [headers, ...rows]
+        .map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(','))
+        .join('\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'packcheck-business-products.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    });
 
     portalBtn.addEventListener('click', (e) => {
       e.stopPropagation();
