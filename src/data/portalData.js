@@ -1,5 +1,5 @@
 const consumerData = {
-  brandName: 'LabelIQ',
+  brandName: 'PackCheck AI',
   navLinks: ['Product', 'Rule Engine', 'Verification'],
   categories: ['All', 'Food', 'Cosmetics', 'Medical', 'Household', 'Textiles'],
   steps: [

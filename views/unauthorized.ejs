@@ -22,7 +22,7 @@
       <a href="/signout?portal=<%= attemptedRole %>" class="w-full py-2.5 rounded-xl bg-[#4338CA] text-white text-sm font-semibold hover:bg-indigo-700 transition-colors">
         Switch Account / Sign In to <%= attemptedRole.toUpperCase() %>
       </a>
-      <a href="<%= userRole === 'consumer' ? '/' : (userRole === 'business' ? '/business' : '/legal') %>" class="w-full py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors">
+      <a href="<%= userRole === 'consumer' ? '/public' : (userRole === 'business' ? '/business' : '/legal') %>" class="w-full py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors">
         Return to My Portal
       </a>
     </div>

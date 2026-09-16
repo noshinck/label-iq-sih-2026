@@ -13,8 +13,13 @@ function getPortal(value) {
 function redirectToPortal(res, role) {
   if (role === 'business') return res.redirect('/business');
   if (role === 'legal') return res.redirect('/legal');
-  return res.redirect('/');
+  return res.redirect('/public');
 }
+
+router.get('/public/login', (req, res) => res.redirect('/signin?portal=consumer'));
+router.get('/business/login', (req, res) => res.redirect('/signin?portal=business'));
+router.get('/officer/login', (req, res) => res.redirect('/signin?portal=legal'));
+router.get('/admin/login', (req, res) => res.redirect('/signin?portal=legal'));
 
 router.get('/signin', (req, res) => {
   res.render('signin', {
@@ -71,7 +76,7 @@ router.post('/signup', async (req, res) => {
 router.post('/auth/demo/public', async (req, res) => {
   req.session.user = await authService.demoPublicUser();
   sessionCookie.setUser(res, req.session.user);
-  return res.redirect('/');
+  return res.redirect('/public');
 });
 
 router.get('/signout', (req, res) => {

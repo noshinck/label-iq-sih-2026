@@ -120,7 +120,15 @@ async function buildLegalDashboardData(user, sectionName) {
   };
 }
 
-router.get('/', checkPortalAuth('consumer'), (req, res) => {
+router.get('/', (req, res) => {
+  res.render('landing', {
+    data: {
+      brandName: 'PackCheck AI'
+    }
+  });
+});
+
+router.get('/public', checkPortalAuth('consumer'), (req, res) => {
   res.render('index', {
     data: {
       ...consumerData,
