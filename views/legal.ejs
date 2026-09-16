@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LabelIQ - Enforcement Case Queue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              DEFAULT: '#4638d9',
+              hover: '#3a2ec2'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#fcfdff] text-slate-700 antialiased font-sans min-h-screen flex flex-col">
+  <%
+    const activeSection = data.activeSection || 'complaints';
+    const sectionTitles = {
+      complaints: ['Submitted Complaints', 'Consumer submissions awaiting triage'],
+      'case-queue': ['Case Queue', 'Priority triage based on statutory non-compliances'],
+      inspections: ['Inspection Records', 'Field inspection logs and statutory verification'],
+      rules: ['Rule Management', 'Legal Metrology rule context loaded from source documents'],
+      audit: ['Audit Trail', 'Database record of officer and system actions']
+    };
+    const activeNav = 'bg-[#f5f6ff] text-[#4638d9] font-semibold';
+    const idleNav = 'text-slate-600 hover:bg-slate-50 font-medium transition-colors';
+    const title = sectionTitles[activeSection] || sectionTitles.complaints;
+  %>
+
+  <!-- Top Navbar -->
+  <header class="w-full bg-white border-b border-slate-100 sticky top-0 z-50">
+    <div class="px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Links -->
+      <div class="flex items-center gap-10">
+        <a href="/" class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-[#4638d9] flex items-center justify-center text-white">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="4" y1="6" x2="6" y2="6" />
+              <line x1="10" y1="6" x2="20" y2="6" />
+              <line x1="4" y1="12" x2="6" y2="12" />
+              <line x1="10" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="18" x2="6" y2="18" />
+              <line x1="10" y1="18" x2="20" y2="18" />
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-slate-900 tracking-tight">LabelIQ</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-slate-600">
+          <a href="/legal?section=complaints" class="hover:text-slate-900 transition-colors">Product</a>
+          <a href="/legal/rules" class="hover:text-slate-900 transition-colors">Rule Engine</a>
+          <a href="/legal?section=inspections" class="hover:text-slate-900 transition-colors">Verification</a>
+        </nav>
+      </div>
+
+      <!-- Right Portal Menu with Dropdown -->
+      <div class="flex items-center gap-6">
+        <div class="relative" id="portal-menu-container">
+          <button 
+            id="portal-btn"
+            type="button"
+            class="flex items-center gap-1.5 text-[14px] font-medium text-slate-800 hover:text-slate-900 focus:outline-none"
+          >
+            <span>Legal Authority</span>
+            <svg id="dropdown-chevron" class="w-4 h-4 text-slate-400 stroke-[2] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Dropdown Navigation -->
+          <div 
+            id="portal-dropdown" 
+            class="hidden absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden z-50 py-1"
+          >
+            <a href="/" class="w-full px-5 py-3 text-left text-[14px] font-medium text-slate-800 hover:bg-slate-50 transition-colors block">
+              Consumer Portal
+            </a>
+            <a href="/business" class="w-full px-5 py-3 text-left text-[14px] font-medium text-slate-800 hover:bg-slate-50 transition-colors block">
+              Business Portal
+            </a>
+            <a href="/legal" class="w-full px-5 py-3 text-left text-[14px] font-medium text-[#4638d9] bg-[#f5f6ff] hover:bg-[#eceeff] flex items-center justify-between transition-colors block">
+              <span>Legal Authority</span>
+              <svg class="w-3.5 h-3.5 text-[#4638d9] stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <a href="/signout?portal=legal" class="px-5 py-2 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[14px] shadow-sm transition-colors">
+          Sign Out
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-1">
+    
+    <!-- Sidebar -->
+    <aside class="w-64 border-r border-slate-100 bg-white flex flex-col justify-between py-6 px-4 shrink-0">
+      <div class="space-y-6">
+        
+        <!-- Officer Info Card -->
+        <div class="flex items-center justify-between px-2">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#fbf2ea] text-[#d97706] font-bold text-xs flex items-center justify-center border border-[#fed7aa]/50">
+              <%= data.officer.initials %>
+            </div>
+            <div>
+              <h2 class="text-sm font-bold text-slate-900 leading-tight"><%= data.officer.name %></h2>
+              <p class="text-xs text-slate-400 mt-0.5"><%= data.officer.role %></p>
+            </div>
+          </div>
+          <button class="text-slate-400 hover:text-slate-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Audit Alert Pill -->
+        <div class="mx-1 px-3 py-2 rounded-xl bg-[#fffbeb] border border-[#fef3c7] flex items-center gap-2 text-xs text-[#b45309] font-medium">
+          <svg class="w-4 h-4 text-[#d97706] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>All actions are audit-logged</span>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="space-y-1 pt-2">
+          <a href="/legal?section=complaints" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] <%= activeSection === 'complaints' ? activeNav : idleNav %>">
+            <span>Submitted Complaints</span>
+            <% if (data.navCounts.complaints) { %>
+              <span class="w-5 h-5 rounded-full bg-[#ef4444] text-white text-[11px] font-bold flex items-center justify-center"><%= data.navCounts.complaints %></span>
+            <% } %>
+          </a>
+
+          <a href="/legal?section=case-queue" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] <%= activeSection === 'case-queue' ? activeNav : idleNav %>">
+            <span>Case Queue</span>
+            <% if (data.navCounts.queue) { %>
+              <span class="w-5 h-5 rounded-full bg-[#ef4444] text-white text-[11px] font-bold flex items-center justify-center"><%= data.navCounts.queue %></span>
+            <% } %>
+          </a>
+
+          <a href="/legal?section=inspections" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] <%= activeSection === 'inspections' ? activeNav : idleNav %>">
+            Inspection Records
+            <% if (data.navCounts.inspections) { %>
+              <span class="text-[11px] text-slate-400"><%= data.navCounts.inspections %></span>
+            <% } %>
+          </a>
+
+          <a href="/legal/rules" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] <%= activeSection === 'rules' ? activeNav : idleNav %>">
+            Rule Management
+            <span class="px-2 py-0.5 rounded-md bg-[#eef2ff] text-[#4638d9] text-[10px] font-bold"><%= data.navCounts.rules %></span>
+          </a>
+
+          <a href="/legal?section=audit" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] <%= activeSection === 'audit' ? activeNav : idleNav %>">
+            Audit Trail
+            <% if (data.navCounts.audit) { %>
+              <span class="text-[11px] text-slate-400"><%= data.navCounts.audit %></span>
+            <% } %>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 px-10 py-8 overflow-y-auto max-w-5xl">
+      
+      <!-- Page Title -->
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight"><%= title[0] %></h1>
+        <p class="text-sm text-slate-500 mt-1"><%= title[1] %></p>
+        <p class="text-xs text-slate-400 mt-1">Database: <%= data.databaseMode %></p>
+      </div>
+
+      <!-- New Inspection -->
+      <% if (activeSection === 'complaints') { %>
+      <section class="mt-8 bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight">New Inspection</h2>
+            <p class="text-sm text-slate-500 mt-1">Start with product photos. Product details are extracted after OCR.</p>
+          </div>
+        </div>
+
+        <form id="inspection-form" action="/legal/inspections/analyze-upload" method="POST" enctype="multipart/form-data" class="mt-5 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="cursor-pointer border border-dashed border-slate-200 rounded-2xl px-5 py-6 text-center hover:border-[#4638d9] transition-colors">
+              <input id="camera-input" name="photos" type="file" accept="image/*" capture="environment" class="hidden" />
+              <span class="block text-sm font-semibold text-slate-800">Take Photo</span>
+              <span class="block text-xs text-slate-400 mt-1">Camera capture on supported devices</span>
+            </label>
+
+            <label class="cursor-pointer border border-dashed border-slate-200 rounded-2xl px-5 py-6 text-center hover:border-[#4638d9] transition-colors">
+              <input id="upload-input" name="photos" type="file" accept="image/*" multiple class="hidden" />
+              <span class="block text-sm font-semibold text-slate-800">Upload Photos</span>
+              <span class="block text-xs text-slate-400 mt-1">Front, back, side, top, bottom, label close-up</span>
+            </label>
+          </div>
+
+          <div id="selected-images" class="hidden border border-slate-100 rounded-2xl overflow-hidden"></div>
+
+          <div id="analysis-status" class="hidden rounded-xl border border-indigo-100 bg-indigo-50/60 px-4 py-3 text-sm text-[#4338CA] font-medium">
+            Uploading...
+          </div>
+
+          <button
+            id="analyze-button"
+            type="submit"
+            class="px-5 py-2.5 rounded-xl bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-semibold text-sm shadow-sm transition-colors disabled:opacity-50"
+            disabled
+          >
+            Analyze Product
+          </button>
+        </form>
+      </section>
+      <% } %>
+
+      <!-- Metric Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <p class="text-3xl font-bold text-slate-900"><%= data.metrics.totalCases %></p>
+          <p class="text-xs text-slate-400 mt-1.5">Total cases</p>
+        </div>
+
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <p class="text-3xl font-bold text-slate-900"><%= data.metrics.awaitingAction %></p>
+          <p class="text-xs text-slate-400 mt-1.5">Awaiting action</p>
+        </div>
+
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <p class="text-3xl font-bold text-slate-900"><%= data.metrics.investigating %></p>
+          <p class="text-xs text-slate-400 mt-1.5">Investigating</p>
+        </div>
+
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <p class="text-3xl font-bold text-slate-900"><%= data.metrics.verifiedViolations %></p>
+          <p class="text-xs text-slate-400 mt-1.5">Verified violations</p>
+        </div>
+      </div>
+
+      <% if (activeSection === 'complaints') { %>
+        <div class="mt-8">
+          <h2 class="text-lg font-bold text-slate-900 tracking-tight">Submitted Complaints</h2>
+          <div class="mt-3 space-y-3.5">
+            <% if (!data.complaints.length) { %>
+              <div class="bg-white border border-slate-200/80 rounded-2xl p-6 text-sm text-slate-500">
+                No submitted complaints yet. Consumer complaints will appear here after the public complaint form is connected.
+              </div>
+            <% } %>
+            <% data.complaints.forEach(item => { %>
+              <div class="bg-white border border-slate-200/80 rounded-2xl p-5 flex items-center justify-between group shadow-xs">
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+                    <span class="text-xs font-mono text-slate-400"><%= item.id.slice(0, 8) %></span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold <%= item.statusStyle %>"><%= item.status %></span>
+                    <span class="text-xs text-slate-400"><%= item.displayDate %></span>
+                  </div>
+                  <h3 class="text-[15px] font-bold text-slate-900 tracking-tight"><%= item.product || 'Unknown product' %></h3>
+                  <p class="text-xs text-slate-500 font-normal"><%= item.description || 'No description provided.' %></p>
+                  <% if (item.location) { %>
+                    <p class="text-xs text-slate-400">Location: <%= item.location %></p>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+
+      <% if (activeSection === 'case-queue') { %>
+        <div class="mt-8 space-y-3.5">
+          <% if (!data.queue.length) { %>
+            <div class="bg-white border border-slate-200/80 rounded-2xl p-6 text-sm text-slate-500">No active cases need action right now.</div>
+          <% } %>
+          <% data.queue.forEach(item => { %>
+            <a href="/legal/inspections/<%= item.id %>" class="bg-white border border-slate-200/80 rounded-2xl p-5 hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group shadow-xs">
+              <div class="space-y-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-2 h-2 rounded-full <%= item.priority === 'HIGH' ? 'bg-red-500' : (item.priority === 'MEDIUM' ? 'bg-amber-500' : 'bg-slate-400') %> shrink-0"></span>
+                  <span class="text-xs font-mono text-slate-400"><%= item.id.slice(0, 8) %></span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold <%= item.statusStyle %>"><%= item.result_status || item.status %></span>
+                  <span class="text-xs text-slate-400"><%= item.displayDate %></span>
+                </div>
+                <h3 class="text-[15px] font-bold text-slate-900 tracking-tight"><%= item.title %></h3>
+                <p class="text-xs text-slate-500 font-normal"><%= item.issue %></p>
+                <div class="flex items-center gap-2 pt-1">
+                  <span class="px-2 py-0.5 rounded-md bg-[#fff1f2] border border-[#ffe4e6] text-[#e11d48] text-[11px] font-mono font-medium"><%= item.priority %></span>
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-mono font-medium"><%= item.checkCount %> checks</span>
+                </div>
+              </div>
+              <div class="text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all pr-1">
+                <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (activeSection === 'inspections') { %>
+        <div class="mt-8 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
+          <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900 tracking-tight">Field Inspection Log</h2>
+            <span class="text-xs text-slate-400">Updated today</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 text-xs uppercase text-slate-400">
+                <tr>
+                  <th class="text-left px-5 py-3">Case ID</th>
+                  <th class="text-left px-5 py-3">Product</th>
+                  <th class="text-left px-5 py-3">Manufacturer</th>
+                  <th class="text-left px-5 py-3">Inspection Date</th>
+                  <th class="text-left px-5 py-3">Status</th>
+                  <th class="text-right px-5 py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <% data.inspections.forEach(item => { %>
+                  <tr>
+                    <td class="px-5 py-4 text-xs font-mono text-[#4638d9]"><%= item.id.slice(0, 8) %></td>
+                    <td class="px-5 py-4 font-semibold text-slate-900"><%= item.title %></td>
+                    <td class="px-5 py-4 text-slate-600"><%= item.manufacturer %></td>
+                    <td class="px-5 py-4 text-slate-500"><%= item.displayDate %></td>
+                    <td class="px-5 py-4"><span class="px-2.5 py-1 rounded-full text-[11px] font-semibold <%= item.statusStyle %>"><%= item.result_status || item.status %></span></td>
+                    <td class="px-5 py-4 text-right"><a href="/legal/inspections/<%= item.id %>" class="px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50">View Details</a></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% } %>
+
+      <% if (activeSection === 'rules') { %>
+        <div class="mt-8 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
+          <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900 tracking-tight">Legal Rule Directory</h2>
+            <span class="px-2.5 py-0.5 rounded-full bg-[#eef2ff] text-[#4638d9] text-[11px] font-semibold"><%= data.rules.length %> groups</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-50 text-xs uppercase text-slate-400">
+                <tr>
+                  <th class="text-left px-5 py-3">Rule</th>
+                  <th class="text-left px-5 py-3">Subject</th>
+                  <th class="text-left px-5 py-3">Source</th>
+                  <th class="text-left px-5 py-3">What It Covers</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <% data.rules.forEach(rule => { %>
+                  <tr>
+                    <td class="px-5 py-4 text-xs font-mono text-[#4638d9]"><%= rule.rule %></td>
+                    <td class="px-5 py-4 font-semibold text-slate-900"><%= rule.topic %></td>
+                    <td class="px-5 py-4 text-slate-500"><%= rule.source %><% if (rule.page) { %>, p. <%= rule.page %><% } %></td>
+                    <td class="px-5 py-4 text-slate-600"><%= String(rule.text || '').slice(0, 220) %><%= String(rule.text || '').length > 220 ? '...' : '' %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% } %>
+
+      <% if (activeSection === 'audit') { %>
+        <div class="mt-8 bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
+          <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-900 tracking-tight">Audit Events</h2>
+            <span class="text-xs text-slate-400"><%= data.auditLogs.length %> recent records</span>
+          </div>
+          <div class="divide-y divide-slate-100">
+            <% if (!data.auditLogs.length) { %>
+              <div class="p-6 text-sm text-slate-500">No audit events recorded yet.</div>
+            <% } %>
+            <% data.auditLogs.forEach(item => { %>
+              <div class="px-5 py-4 flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-sm font-semibold text-slate-900"><%= item.action %></p>
+                  <p class="text-xs text-slate-500 mt-1">Actor: <%= item.actor_user_id || 'system' %> · Role: <%= item.actor_role || 'system' %></p>
+                  <p class="text-xs text-slate-400 mt-1"><%= JSON.stringify(item.details || {}) %></p>
+                </div>
+                <span class="text-xs text-slate-400 whitespace-nowrap"><%= item.displayDate %></span>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+
+    </main>
+  </div>
+
+  <!-- PackCheck Assistant -->
+  <div id="assistant-panel" class="hidden fixed bottom-20 right-6 w-[360px] max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-300/40 overflow-hidden z-50">
+    <div class="px-4 py-3 bg-[#181d27] text-white flex items-center justify-between">
+      <div>
+        <p class="text-sm font-bold">PackCheck AI</p>
+        <p class="text-[11px] text-slate-300">Legal metrology assistant</p>
+      </div>
+      <button id="assistant-close" type="button" class="w-8 h-8 rounded-full hover:bg-white/10 text-lg leading-none">×</button>
+    </div>
+
+    <div id="assistant-messages" class="h-80 overflow-y-auto p-4 space-y-3 bg-slate-50">
+      <div class="max-w-[85%] rounded-2xl rounded-tl-sm bg-white border border-slate-100 px-3 py-2 text-sm text-slate-700 shadow-sm">
+        Ask me about inspection workflow, OCR results, evidence, MRP, net quantity, manufacturer details, consumer care, or which rule context applies.
+      </div>
+    </div>
+
+    <form id="assistant-form" class="p-3 bg-white border-t border-slate-100 flex gap-2">
+      <input
+        id="assistant-input"
+        type="text"
+        maxlength="1200"
+        placeholder="Ask PackCheck AI..."
+        class="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4638d9]/20 focus:border-[#4638d9]"
+      />
+      <button type="submit" class="px-4 py-2 rounded-xl bg-[#4638d9] text-white text-sm font-semibold hover:bg-[#3a2ec2] disabled:opacity-50">Send</button>
+    </form>
+  </div>
+
+  <button
+    id="assistant-toggle"
+    aria-label="Open PackCheck AI assistant"
+    class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#181d27] text-white flex items-center justify-center font-bold text-sm shadow-md hover:bg-black transition-colors z-50"
+  >
+    AI
+  </button>
+
+  <script>
+    const selectedImages = [];
+    const selectedImagesBox = document.getElementById('selected-images');
+    const analyzeButton = document.getElementById('analyze-button');
+    const inspectionForm = document.getElementById('inspection-form');
+    const analysisStatus = document.getElementById('analysis-status');
+    const imageRoles = ['front', 'back', 'side', 'top', 'bottom', 'mrp-label-close-up'];
+    const assistantToggle = document.getElementById('assistant-toggle');
+    const assistantPanel = document.getElementById('assistant-panel');
+    const assistantClose = document.getElementById('assistant-close');
+    const assistantForm = document.getElementById('assistant-form');
+    const assistantInput = document.getElementById('assistant-input');
+    const assistantMessages = document.getElementById('assistant-messages');
+
+    function addAssistantMessage(text, type = 'assistant') {
+      const bubble = document.createElement('div');
+      bubble.className = type === 'user'
+        ? 'ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-[#4638d9] px-3 py-2 text-sm text-white'
+        : 'max-w-[85%] rounded-2xl rounded-tl-sm bg-white border border-slate-100 px-3 py-2 text-sm text-slate-700 shadow-sm whitespace-pre-wrap';
+      bubble.textContent = text;
+      assistantMessages.appendChild(bubble);
+      assistantMessages.scrollTop = assistantMessages.scrollHeight;
+      return bubble;
+    }
+
+    assistantToggle.addEventListener('click', () => {
+      assistantPanel.classList.toggle('hidden');
+      if (!assistantPanel.classList.contains('hidden')) assistantInput.focus();
+    });
+
+    assistantClose.addEventListener('click', () => {
+      assistantPanel.classList.add('hidden');
+    });
+
+    assistantForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = assistantInput.value.trim();
+      if (!message) return;
+
+      addAssistantMessage(message, 'user');
+      assistantInput.value = '';
+      const waiting = addAssistantMessage('Thinking...');
+      assistantForm.querySelector('button').disabled = true;
+
+      try {
+        const response = await fetch('/api/assistant/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, page: window.location.pathname + window.location.search })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Assistant failed.');
+        waiting.textContent = payload.answer;
+      } catch (error) {
+        waiting.textContent = error.message;
+      } finally {
+        assistantForm.querySelector('button').disabled = false;
+        assistantInput.focus();
+      }
+    });
+
+    function refreshSelectedImages() {
+      selectedImagesBox.innerHTML = '';
+      selectedImagesBox.classList.toggle('hidden', selectedImages.length === 0);
+      analyzeButton.disabled = selectedImages.length === 0;
+
+      selectedImages.forEach((file, index) => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-slate-100 last:border-b-0';
+        row.innerHTML = `
+          <div>
+            <p class="text-sm font-semibold text-slate-800">${file.name}</p>
+            <p class="text-xs text-slate-400">${Math.round(file.size / 1024)} KB</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select name="imageTypes" class="role-select rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700">
+              ${imageRoles.map((role) => `<option value="${role}">${role.replaceAll('-', ' ')}</option>`).join('')}
+            </select>
+            <button type="button" data-index="${index}" class="remove-image px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50">Remove</button>
+          </div>
+        `;
+        selectedImagesBox.appendChild(row);
+      });
+    }
+
+    function addFiles(files) {
+      Array.from(files).forEach((file) => {
+        if (file.type.startsWith('image/') && selectedImages.length < 6) selectedImages.push(file);
+      });
+      refreshSelectedImages();
+    }
+
+    if (inspectionForm) {
+      document.getElementById('camera-input').addEventListener('change', (event) => addFiles(event.target.files));
+      document.getElementById('upload-input').addEventListener('change', (event) => addFiles(event.target.files));
+
+      selectedImagesBox.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('remove-image')) return;
+        selectedImages.splice(Number(event.target.dataset.index), 1);
+        refreshSelectedImages();
+      });
+    }
+
+    function stageIcon(stage) {
+      if (!stage) return '○';
+      if (stage.status === 'COMPLETED') return '✓';
+      if (stage.status === 'RUNNING') return '●';
+      if (stage.status === 'FAILED') return '!';
+      return '○';
+    }
+
+    function renderJob(job) {
+      const order = ['UPLOADING', 'PREPROCESSING', 'OCR', 'EXTRACTION', 'LEGAL_RETRIEVAL', 'RULE_VALIDATION', 'EVIDENCE', 'COMPLETED'];
+      analysisStatus.innerHTML = `
+        <div class="flex items-center justify-between gap-3">
+          <span>${job.message || 'Processing...'}</span>
+          <span>${job.progress || 0}%</span>
+        </div>
+        <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          ${order.map((name) => `<div>${stageIcon(job.stages && job.stages[name])} ${name.replaceAll('_', ' ')}</div>`).join('')}
+        </div>
+        ${job.error ? `<p class="mt-3 text-xs font-semibold text-red-600">${job.error}</p>` : ''}
+        <div class="mt-3 flex gap-2">
+          ${['FAILED', 'CANCELLED'].includes(job.status) ? `<button type="button" id="retry-analysis" class="px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs font-semibold">Retry</button>` : ''}
+          ${!['COMPLETED', 'FAILED', 'CANCELLED'].includes(job.status) ? `<button type="button" id="cancel-analysis" class="px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs font-semibold">Cancel Analysis</button>` : ''}
+        </div>
+      `;
+    }
+
+    async function pollJob(jobId) {
+      const response = await fetch(`/api/analysis/jobs/${jobId}`);
+      const job = await response.json();
+      if (!response.ok) throw new Error(job.error || 'Could not read analysis job.');
+      renderJob(job);
+
+      const cancelButton = document.getElementById('cancel-analysis');
+      if (cancelButton) {
+        cancelButton.onclick = async () => {
+          await fetch(`/api/analysis/jobs/${jobId}/cancel`, { method: 'POST' });
+        };
+      }
+
+      const retryButton = document.getElementById('retry-analysis');
+      if (retryButton) {
+        retryButton.onclick = async () => {
+          await fetch(`/api/analysis/jobs/${jobId}/retry`, { method: 'POST' });
+          pollJob(jobId);
+        };
+      }
+
+      if (job.status === 'COMPLETED') {
+        window.location.href = job.result_url;
+        return;
+      }
+      if (job.status === 'FAILED' || job.status === 'CANCELLED') {
+        analyzeButton.disabled = false;
+        return;
+      }
+      setTimeout(() => pollJob(jobId), 1500);
+    }
+
+    if (inspectionForm) {
+      inspectionForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!selectedImages.length) {
+          return;
+        }
+
+        document.getElementById('camera-input').disabled = true;
+        analysisStatus.classList.remove('hidden');
+        analysisStatus.textContent = 'Uploading product images...';
+        analyzeButton.disabled = true;
+
+        try {
+          const formData = new FormData();
+          selectedImages.forEach((file) => formData.append('photos', file));
+          selectedImagesBox.querySelectorAll('.role-select').forEach((select) => formData.append('imageTypes', select.value));
+          const response = await fetch('/api/analysis/jobs', { method: 'POST', body: formData });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.error || 'Could not start analysis.');
+          pollJob(payload.job_id);
+        } catch (error) {
+          analysisStatus.textContent = error.message;
+          analyzeButton.disabled = false;
+        }
+      });
+    }
+
+    const portalBtn = document.getElementById('portal-btn');
+    const portalDropdown = document.getElementById('portal-dropdown');
+    const dropdownChevron = document.getElementById('dropdown-chevron');
+
+    portalBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      portalDropdown.classList.toggle('hidden');
+      dropdownChevron.classList.toggle('rotate-180');
+    });
+
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('portal-menu-container');
+      if (container && !container.contains(e.target)) {
+        portalDropdown.classList.add('hidden');
+        dropdownChevron.classList.remove('rotate-180');
+      }
+    });
+  </script>
+</body>
+</html>
