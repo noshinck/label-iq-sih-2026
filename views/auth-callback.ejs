@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signing in - LabelIQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="min-h-screen bg-[#FAFBFD] text-slate-800 flex items-center justify-center p-6">
+  <main class="w-full max-w-md rounded-3xl bg-white border border-slate-100 shadow-xl shadow-slate-200/50 p-8 text-center">
+    <img src="/assets/labeliq-logo.png" alt="LabelIQ" class="mx-auto h-14 w-auto object-contain" />
+    <h1 class="mt-5 text-xl font-bold text-slate-900">Completing Google sign-in</h1>
+    <p id="callback-status" class="mt-2 text-sm text-slate-500">Restoring your Supabase session...</p>
+    <div id="callback-error" class="hidden mt-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"></div>
+  </main>
+
+  <script>
+    const supabaseUrl = <%- JSON.stringify(supabase.url || '') %>;
+    const supabasePublishableKey = <%- JSON.stringify(supabase.publishableKey || '') %>;
+    const statusBox = document.getElementById('callback-status');
+    const errorBox = document.getElementById('callback-error');
+
+    function fail(message) {
+      statusBox.textContent = 'Google authentication failed.';
+      errorBox.textContent = message;
+      errorBox.classList.remove('hidden');
+      const portal = localStorage.getItem('labeliq.oauth.portal') || 'consumer';
+      setTimeout(() => {
+        window.location.href = `/signin?portal=${encodeURIComponent(portal)}&error=${encodeURIComponent(message)}`;
+      }, 2500);
+    }
+
+    async function completeOAuth() {
+      try {
+        if (!supabaseUrl || !supabasePublishableKey) {
+          throw new Error('Supabase OAuth is not configured.');
+        }
+
+        const client = supabase.createClient(supabaseUrl, supabasePublishableKey, {
+          auth: {
+            persistSession: true,
+            detectSessionInUrl: true,
+            autoRefreshToken: true
+          }
+        });
+
+        const { data, error } = await client.auth.getSession();
+        if (error) throw error;
+        if (!data.session) throw new Error('Supabase session was not restored from Google callback.');
+
+        const targetPortal = localStorage.getItem('labeliq.oauth.portal') || 'consumer';
+        statusBox.textContent = 'Verifying portal access...';
+        const response = await fetch('/auth/supabase/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            accessToken: data.session.access_token,
+            refreshToken: data.session.refresh_token,
+            targetPortal
+          })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'Portal access denied.');
+
+        localStorage.removeItem('labeliq.oauth.portal');
+        statusBox.textContent = 'Signed in. Opening your portal...';
+        window.location.href = payload.redirectTo || '/public';
+      } catch (error) {
+        fail(error.message);
+      }
+    }
+
+    completeOAuth();
+  </script>
+</body>
+</html>
