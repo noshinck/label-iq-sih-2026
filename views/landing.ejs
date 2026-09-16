@@ -39,29 +39,48 @@
 </head>
 <body class="bg-[#f4f8fc] text-slate-700 antialiased font-sans">
   <header class="sticky top-0 z-50 bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 bg-white">
-      <a href="/" class="flex items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-[#eef4fb] border border-[#dbe8f5] grid place-items-center text-navy">
-          <svg class="w-9 h-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 3h10l3 4v14H4V7l3-4Z" />
-            <path d="M8 12h8M8 16h5" />
-            <path d="M8 7h8" />
-          </svg>
+    <div class="bg-[#08284f] text-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 h-10 flex items-center justify-between text-sm">
+        <div class="flex items-center gap-3 font-bold">
+          <span class="h-5 w-5 rounded-full bg-white grid place-items-center text-[#08284f] text-[10px]">IN</span>
+          <span>भारत सरकार</span>
+          <span class="h-5 w-px bg-white/40"></span>
+          <span>GOVERNMENT OF INDIA</span>
         </div>
-        <div>
-          <p class="text-3xl font-black text-ink tracking-tight">PackCheck AI</p>
-          <p class="text-lg text-slate-500">AI-powered packaged commodity compliance checker</p>
-        </div>
-      </a>
+        <button class="font-semibold text-blue-100 hover:text-white">English</button>
+      </div>
+    </div>
 
-      <div class="flex flex-wrap items-center gap-3">
-        <a href="/signin" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-7 py-4 text-base font-bold text-ink hover:border-slate-300">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
-          Login
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-7 bg-white">
+      <div class="grid lg:grid-cols-[1fr_auto] gap-6 lg:items-center">
+        <a href="/" class="flex items-center gap-5">
+          <div class="w-16 h-16 rounded-full bg-[#f5f7fb] border border-slate-200 grid place-items-center text-navy shadow-sm">
+            <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3 5 6v5c0 4.6 2.8 8.2 7 10 4.2-1.8 7-5.4 7-10V6l-7-3Z" />
+              <path d="M9 11h6M9 15h6M9 7h6" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-3xl font-black text-ink tracking-tight">Department of Legal Metrology</p>
+            <p class="mt-1 text-base text-slate-500">Ministry of Consumer Affairs, Food & Public Distribution - Government of India</p>
+          </div>
         </a>
-        <a href="/officer/login" class="inline-flex items-center justify-center rounded-xl bg-navy px-8 py-4 text-base font-bold text-white shadow-lg shadow-blue-900/20 hover:bg-[#0b294f]">
-          Get Started
-        </a>
+
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 lg:justify-end">
+          <div class="lg:text-right">
+            <p class="text-4xl font-black text-ink leading-tight">Compliance<br class="hidden lg:block"> Checker</p>
+            <p class="mt-1 text-base text-slate-500">PackCheck AI packaged commodity system</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="/signin" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-base font-bold text-ink hover:border-slate-300">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+              Login
+            </a>
+            <a href="/officer/login" class="inline-flex items-center justify-center rounded-xl bg-navy px-7 py-3 text-base font-bold text-white shadow-lg shadow-blue-900/20 hover:bg-[#0b294f]">
+              Get Started
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
