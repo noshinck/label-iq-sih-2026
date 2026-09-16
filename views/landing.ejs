@@ -15,9 +15,6 @@
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
             ink: '#101828',
-            plum: '#2563eb',
-            sunset: '#38bdf8',
-            citrus: '#e0f2fe',
             trust: '#12a36f',
             navy: '#0f3564'
           }
@@ -70,7 +67,7 @@
 
         <div class="flex items-center gap-2">
           <a href="/signin" class="hidden rounded-full px-4 py-2 text-xs font-black text-ink hover:bg-slate-100 sm:inline-flex">Sign in</a>
-          <a href="/public/login" class="rounded-full bg-plum px-4 py-2 text-xs font-black text-white shadow-lg shadow-blue-300/40 hover:bg-[#1d4ed8]">Scan now</a>
+          <a href="/public/login" class="rounded-full bg-[#2563eb] px-4 py-2 text-xs font-black text-white shadow-lg shadow-blue-300/40 hover:bg-[#1d4ed8]">Scan now</a>
         </div>
       </div>
     </div>
@@ -85,20 +82,20 @@
             <h1 class="mt-5 text-5xl font-black leading-[.95] tracking-tight text-ink sm:text-7xl">
               Scan labels.<br>
               Catch issues.<br>
-              <span class="text-plum">Prove it.</span>
+              <span class="text-[#2563eb]">Prove it.</span>
             </h1>
             <p class="mt-6 max-w-xl text-lg leading-8 text-slate-700">
               PackCheck AI turns product photos into extracted declarations, rule checks, evidence highlights and officer-ready compliance reports.
             </p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="/public/login" class="inline-flex justify-center rounded-full bg-plum px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-400/30 hover:bg-[#1d4ed8]">Start consumer scan</a>
+              <a href="/public/login" class="inline-flex justify-center rounded-full bg-[#2563eb] px-6 py-3 text-sm font-black text-white shadow-xl shadow-blue-400/30 hover:bg-[#1d4ed8]">Start consumer scan</a>
               <a href="/officer/login" class="inline-flex justify-center rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-black text-ink hover:border-black/20">Officer portal</a>
             </div>
 
             <div class="mt-8 rounded-2xl border border-white/70 bg-white/80 p-4 shadow-xl shadow-blue-300/20 backdrop-blur">
               <div class="flex items-start gap-3">
-                <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-plum to-sunset"></div>
+                <div class="h-9 w-9 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[#2563eb] to-[#38bdf8]"></div>
                 <p class="text-sm leading-6 text-slate-700">
                   <b class="text-ink">Field-ready flow:</b> upload front and back photos, run OCR, retrieve legal context, verify findings, then save the inspection.
                 </p>
@@ -148,7 +145,7 @@
                 </div>
               </div>
               <div class="mt-5 h-2 rounded-full bg-slate-100">
-                <div class="h-2 w-[68%] rounded-full bg-plum"></div>
+                <div class="h-2 w-[68%] rounded-full bg-[#2563eb]"></div>
               </div>
             </div>
           </div>
@@ -173,7 +170,7 @@
           ['Save evidence', 'Findings point back to uploaded package images and OCR text.']
         ].forEach(card => { %>
           <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-100">
-            <div class="h-10 w-10 rounded-2xl bg-citrus"></div>
+            <div class="h-10 w-10 rounded-2xl bg-[#dbeafe]"></div>
             <h3 class="mt-5 text-lg font-black text-ink"><%= card[0] %></h3>
             <p class="mt-2 text-sm leading-6 text-slate-600"><%= card[1] %></p>
           </div>
@@ -184,7 +181,7 @@
     <section id="features" class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
       <div class="space-y-8">
         <div class="grid items-center gap-8 rounded-[28px] border soft-border bg-white p-6 shadow-sm md:grid-cols-[.95fr_1.05fr] md:p-10">
-          <div class="rounded-3xl bg-gradient-to-br from-citrus to-white p-6 shadow-xl shadow-sky-200/40">
+          <div class="rounded-3xl bg-gradient-to-br from-[#dbeafe] to-white p-6 shadow-xl shadow-sky-200/40">
             <div class="grid grid-cols-2 gap-3">
               <% ['Product name', 'Manufacturer', 'MRP', 'Net quantity', 'Country', 'Consumer care'].forEach(item => { %>
                 <div class="rounded-2xl bg-white/90 p-4 text-sm font-black text-slate-700 shadow-sm"><%= item %></div>
@@ -192,7 +189,7 @@
             </div>
           </div>
           <div>
-            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-plum">AI extraction</p>
+            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-[#2563eb]">AI extraction</p>
             <h2 class="mt-3 text-3xl font-black tracking-tight">From blurry package photos to structured declarations.</h2>
             <p class="mt-4 text-sm leading-7 text-slate-600">PackCheck AI combines OCR and backend AI extraction so officers and businesses can review the exact fields that matter for packaged commodities.</p>
           </div>
@@ -200,7 +197,7 @@
 
         <div class="grid items-center gap-8 rounded-[28px] border soft-border bg-white p-6 shadow-sm md:grid-cols-[1.05fr_.95fr] md:p-10">
           <div>
-            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-plum">Rule validation</p>
+            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-[#2563eb]">Rule validation</p>
             <h2 class="mt-3 text-3xl font-black tracking-tight">Legal checks that explain what passed and what needs review.</h2>
             <p class="mt-4 text-sm leading-7 text-slate-600">The rule engine uses retrieved legal context, deterministic checks and evidence records instead of asking AI to directly decide legality.</p>
           </div>
@@ -262,7 +259,7 @@
     <section id="portals" class="mx-auto max-w-7xl px-5 py-20 sm:px-8">
       <div class="grid items-start gap-8 md:grid-cols-[.8fr_1.2fr]">
         <div>
-          <p class="text-[11px] font-black uppercase tracking-[0.2em] text-plum">Get started</p>
+          <p class="text-[11px] font-black uppercase tracking-[0.2em] text-[#2563eb]">Get started</p>
           <h2 class="mt-3 text-4xl font-black tracking-tight">Choose the right door.</h2>
           <p class="mt-4 text-sm leading-7 text-slate-600">Consumers scan, businesses pre-check, and officers verify inspection records.</p>
         </div>
@@ -277,7 +274,7 @@
                 <h3 class="text-lg font-black text-ink"><%= portal[1] %></h3>
                 <p class="mt-2 text-sm text-slate-600"><%= portal[2] %></p>
               </div>
-              <span class="grid h-11 w-11 place-items-center rounded-full bg-citrus font-black transition group-hover:bg-plum group-hover:text-white">→</span>
+              <span class="grid h-11 w-11 place-items-center rounded-full bg-[#dbeafe] font-black transition group-hover:bg-[#2563eb] group-hover:text-white">→</span>
             </a>
           <% }) %>
         </div>
