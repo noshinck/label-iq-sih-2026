@@ -1,0 +1,10 @@
+{
+  "language.label": "ভাষা",
+  "inspection.why": "কিয়?",
+  "inspection.ruleReference": "নিয়মৰ উল্লেখ",
+  "inspection.source": "উৎস",
+  "inspection.detectedIssue": "ধৰা পৰা সমস্যা",
+  "status.potential_non_compliance": "সম্ভাৱ্য অননুগত্য",
+  "status.needs_verification": "যাচাইকৰণ প্ৰয়োজন",
+  "common.notDetected": "ধৰা নপৰিল"
+}

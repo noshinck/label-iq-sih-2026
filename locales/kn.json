@@ -1,0 +1,10 @@
+{
+  "language.label": "ಭಾಷೆ",
+  "inspection.why": "ಏಕೆ?",
+  "inspection.ruleReference": "ನಿಯಮ ಉಲ್ಲೇಖ",
+  "inspection.source": "ಮೂಲ",
+  "inspection.detectedIssue": "ಪತ್ತೆಯಾದ ಸಮಸ್ಯೆ",
+  "status.potential_non_compliance": "ಸಂಭಾವ್ಯ ಅನುಸರಣೆ ಕೊರತೆ",
+  "status.needs_verification": "ಪರಿಶೀಲನೆ ಅಗತ್ಯ",
+  "common.notDetected": "ಪತ್ತೆಯಾಗಿಲ್ಲ"
+}

@@ -1,0 +1,10 @@
+{
+  "language.label": "భాష",
+  "inspection.why": "ఎందుకు?",
+  "inspection.ruleReference": "నియమ సూచన",
+  "inspection.source": "మూలం",
+  "inspection.detectedIssue": "గుర్తించిన సమస్య",
+  "status.potential_non_compliance": "సంభావ్య అననుసరణ",
+  "status.needs_verification": "ధృవీకరణ అవసరం",
+  "common.notDetected": "గుర్తించబడలేదు"
+}

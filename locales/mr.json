@@ -1,0 +1,10 @@
+{
+  "language.label": "भाषा",
+  "inspection.why": "का?",
+  "inspection.ruleReference": "नियम संदर्भ",
+  "inspection.source": "स्रोत",
+  "inspection.detectedIssue": "आढळलेली समस्या",
+  "status.potential_non_compliance": "संभाव्य गैर-अनुपालन",
+  "status.needs_verification": "सत्यापन आवश्यक",
+  "common.notDetected": "आढळले नाही"
+}

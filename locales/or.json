@@ -1,0 +1,10 @@
+{
+  "language.label": "ଭାଷା",
+  "inspection.why": "କାହିଁକି?",
+  "inspection.ruleReference": "ନିୟମ ସନ୍ଦର୍ଭ",
+  "inspection.source": "ସ୍ରୋତ",
+  "inspection.detectedIssue": "ଚିହ୍ନଟ ସମସ୍ୟା",
+  "status.potential_non_compliance": "ସମ୍ଭାବ୍ୟ ଅନନୁସରଣ",
+  "status.needs_verification": "ଯାଞ୍ଚ ଆବଶ୍ୟକ",
+  "common.notDetected": "ଚିହ୍ନଟ ହୋଇନି"
+}

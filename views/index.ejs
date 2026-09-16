@@ -50,14 +50,15 @@
 
         <!-- Main Links -->
         <nav class="hidden md:flex items-center gap-8 text-[15px] font-medium text-slate-600">
-          <% data.navLinks.forEach(link => { %>
-            <a href="#" class="hover:text-slate-900 transition-colors"><%= link %></a>
+          <% data.navLinks.forEach((link, index) => { const navKeys = ['nav.product', 'nav.ruleEngine', 'nav.verification']; %>
+            <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="<%= navKeys[index] %>"><%= link %></a>
           <% }) %>
         </nav>
       </div>
 
       <!-- Right Action Items with Working Dropdown -->
       <div class="flex items-center gap-6">
+        <%- include('partials/language-selector') %>
         <div class="relative" id="portal-menu-container">
           <!-- Trigger Button -->
           <button 
@@ -102,7 +103,7 @@
           </div>
         </div>
 
-        <a href="/signout?portal=consumer" class="px-5 py-2.5 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[15px] transition-colors shadow-sm">
+        <a href="/signout?portal=consumer" class="px-5 py-2.5 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[15px] transition-colors shadow-sm" data-i18n="action.signOut">
           Sign Out
         </a>
       </div>
@@ -201,6 +202,7 @@
 
   <%- include('partials/assistant-widget') %>
 
+  <script src="/js/i18n.js"></script>
   <script>
     // File upload logic
     const dropzone = document.getElementById('dropzone');

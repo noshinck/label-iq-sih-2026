@@ -47,14 +47,15 @@
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-slate-600">
-          <a href="#" class="hover:text-slate-900 transition-colors">Product</a>
-          <a href="#" class="hover:text-slate-900 transition-colors">Rule Engine</a>
-          <a href="#" class="hover:text-slate-900 transition-colors">Verification</a>
+          <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="nav.product">Product</a>
+          <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="nav.ruleEngine">Rule Engine</a>
+          <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="nav.verification">Verification</a>
         </nav>
       </div>
 
       <!-- Right Profile Menu with Functional Dropdown -->
       <div class="flex items-center gap-6">
+        <%- include('partials/language-selector') %>
         <div class="relative" id="portal-menu-container">
           <button 
             id="portal-btn"
@@ -86,7 +87,7 @@
           </div>
         </div>
 
-        <a href="/signout?portal=business" class="px-5 py-2 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[14px] shadow-sm transition-colors">
+        <a href="/signout?portal=business" class="px-5 py-2 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[14px] shadow-sm transition-colors" data-i18n="action.signOut">
           Sign Out
         </a>
       </div>
@@ -408,6 +409,7 @@
 
   <%- include('partials/assistant-widget') %>
 
+  <script src="/js/i18n.js"></script>
   <script>
     const businessProducts = <%- JSON.stringify(data.products).replace(/</g, '\\u003c') %>;
     const portalBtn = document.getElementById('portal-btn');

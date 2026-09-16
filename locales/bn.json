@@ -1,0 +1,10 @@
+{
+  "language.label": "ভাষা",
+  "inspection.why": "কেন?",
+  "inspection.ruleReference": "নিয়মের সূত্র",
+  "inspection.source": "উৎস",
+  "inspection.detectedIssue": "চিহ্নিত সমস্যা",
+  "status.potential_non_compliance": "সম্ভাব্য অ-সম্মতি",
+  "status.needs_verification": "যাচাই প্রয়োজন",
+  "common.notDetected": "সনাক্ত হয়নি"
+}

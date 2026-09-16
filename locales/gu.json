@@ -1,0 +1,10 @@
+{
+  "language.label": "ભાષા",
+  "inspection.why": "શા માટે?",
+  "inspection.ruleReference": "નિયમ સંદર્ભ",
+  "inspection.source": "સ્રોત",
+  "inspection.detectedIssue": "શોધાયેલ મુદ્દો",
+  "status.potential_non_compliance": "સંભવિત બિન-અનુપાલન",
+  "status.needs_verification": "ચકાસણી જરૂરી",
+  "common.notDetected": "મળ્યું નથી"
+}

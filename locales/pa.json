@@ -1,0 +1,10 @@
+{
+  "language.label": "ਭਾਸ਼ਾ",
+  "inspection.why": "ਕਿਉਂ?",
+  "inspection.ruleReference": "ਨਿਯਮ ਹਵਾਲਾ",
+  "inspection.source": "ਸਰੋਤ",
+  "inspection.detectedIssue": "ਪਤਾ ਲੱਗੀ ਸਮੱਸਿਆ",
+  "status.potential_non_compliance": "ਸੰਭਾਵਿਤ ਗੈਰ-ਅਨੁਕੂਲਤਾ",
+  "status.needs_verification": "ਤਸਦੀਕ ਲੋੜੀਂਦੀ ਹੈ",
+  "common.notDetected": "ਪਤਾ ਨਹੀਂ ਲੱਗਿਆ"
+}

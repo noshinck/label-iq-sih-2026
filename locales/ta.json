@@ -1,0 +1,10 @@
+{
+  "language.label": "மொழி",
+  "inspection.why": "ஏன்?",
+  "inspection.ruleReference": "விதி குறிப்பு",
+  "inspection.source": "மூலம்",
+  "inspection.detectedIssue": "கண்டறியப்பட்ட பிரச்சினை",
+  "status.potential_non_compliance": "சாத்தியமான இணக்கமின்மை",
+  "status.needs_verification": "சரிபார்ப்பு தேவை",
+  "common.notDetected": "கண்டறியப்படவில்லை"
+}
