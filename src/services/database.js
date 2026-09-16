@@ -1,11 +1,14 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const { createClient } = require('@supabase/supabase-js');
 const config = require('./config');
 
-const localDbPath = path.join(__dirname, '..', '..', 'data', 'local-db.json');
+const localDbPath = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'labeliq-local-db.json')
+  : path.join(__dirname, '..', '..', 'data', 'local-db.json');
 
 const initialData = {
   users: [
@@ -85,9 +88,10 @@ function writeLocalDb(data) {
   fs.writeFileSync(localDbPath, JSON.stringify(data, null, 2));
 }
 
-const hasSupabase = Boolean(config.supabase.url && config.supabase.serviceRoleKey);
+const supabaseKey = config.supabase.serviceRoleKey || config.supabase.publishableKey;
+const hasSupabase = Boolean(config.supabase.url && supabaseKey);
 const supabase = hasSupabase
-  ? createClient(config.supabase.url, config.supabase.serviceRoleKey, {
+  ? createClient(config.supabase.url, supabaseKey, {
       auth: { persistSession: false }
     })
   : null;

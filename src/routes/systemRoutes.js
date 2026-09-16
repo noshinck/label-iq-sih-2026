@@ -25,7 +25,9 @@ router.get('/api/system/status', async (req, res) => {
       mode: db.hasSupabase ? 'supabase' : 'local-development',
       connected: true,
       supabase_url_configured: Boolean(config.supabase.url),
-      service_role_configured: Boolean(config.supabase.serviceRoleKey)
+      service_role_configured: Boolean(config.supabase.serviceRoleKey),
+      publishable_key_configured: Boolean(config.supabase.publishableKey),
+      key_mode: config.supabase.serviceRoleKey ? 'service-role' : (config.supabase.publishableKey ? 'publishable' : 'local-fallback')
     },
     ocr: {
       engine: 'PaddleOCR',
