@@ -45,8 +45,8 @@ async function getRuleContext(question, limit = 5) {
 
 function buildPrompt({ question, user, page, contexts }) {
   return [
-    'You are PackCheck AI, an in-app assistant for Legal Metrology officers.',
-    'Help the user operate this LabelIQ/PackCheck app and understand packaged commodity compliance.',
+    'You are LabelIQ, an in-app assistant for Legal Metrology officers.',
+    'Help the user operate this LabelIQ app and understand packaged commodity compliance.',
     'Use the provided legal source context when answering legal questions.',
     'Do not invent legal rules, citations, product facts, inspection results, or database records.',
     'If the answer is not supported by the provided context, say that officer verification or source review is needed.',
@@ -88,7 +88,7 @@ async function askOpenAI(prompt) {
     model: config.ai.model,
     temperature: 0.2,
     messages: [
-      { role: 'system', content: 'You are PackCheck AI, a concise in-app assistant for Legal Metrology compliance workflows.' },
+      { role: 'system', content: 'You are LabelIQ, a concise in-app assistant for Legal Metrology compliance workflows.' },
       { role: 'user', content: prompt }
     ]
   });

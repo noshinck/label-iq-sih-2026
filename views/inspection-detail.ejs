@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inspection Result - PackCheck AI</title>
+  <title>Inspection Result - LabelIQ</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,18 +22,8 @@
 <body class="bg-[#fcfdff] text-slate-700 antialiased font-sans min-h-screen">
   <header class="w-full bg-white border-b border-slate-100 sticky top-0 z-50">
     <div class="px-8 h-16 flex items-center justify-between">
-      <a href="/legal" class="flex items-center gap-2.5">
-        <div class="w-7 h-7 rounded-lg bg-[#4638d9] flex items-center justify-center text-white">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="4" y1="6" x2="6" y2="6" />
-            <line x1="10" y1="6" x2="20" y2="6" />
-            <line x1="4" y1="12" x2="6" y2="12" />
-            <line x1="10" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="18" x2="6" y2="18" />
-            <line x1="10" y1="18" x2="20" y2="18" />
-          </svg>
-        </div>
-        <span class="text-xl font-bold text-slate-900 tracking-tight">PackCheck AI</span>
+      <a href="/legal" class="flex items-center">
+        <%- include('partials/brand-logo') %>
       </a>
       <div class="flex items-center gap-3">
         <%- include('partials/language-selector') %>

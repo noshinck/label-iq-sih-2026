@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PackCheck AI - Officer Portal</title>
+  <title>LabelIQ - Officer Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,18 +45,8 @@
       
       <!-- Brand & Links -->
       <div class="flex items-center gap-10">
-        <a href="/" class="flex items-center gap-2.5">
-          <div class="w-7 h-7 rounded-lg bg-[#4638d9] flex items-center justify-center text-white">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-              <line x1="4" y1="6" x2="6" y2="6" />
-              <line x1="10" y1="6" x2="20" y2="6" />
-              <line x1="4" y1="12" x2="6" y2="12" />
-              <line x1="10" y1="12" x2="20" y2="12" />
-              <line x1="4" y1="18" x2="6" y2="18" />
-              <line x1="10" y1="18" x2="20" y2="18" />
-            </svg>
-          </div>
-          <span class="text-xl font-bold text-slate-900 tracking-tight">PackCheck AI</span>
+        <a href="/" class="flex items-center">
+          <%- include('partials/brand-logo') %>
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-slate-600">
@@ -438,11 +428,11 @@
     </main>
   </div>
 
-  <!-- PackCheck Assistant -->
+  <!-- LabelIQ Assistant -->
   <div id="assistant-panel" class="hidden fixed bottom-20 right-6 w-[360px] max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-300/40 overflow-hidden z-50">
     <div class="px-4 py-3 bg-[#181d27] text-white flex items-center justify-between">
       <div>
-        <p class="text-sm font-bold">PackCheck AI</p>
+        <p class="text-sm font-bold">LabelIQ</p>
         <p class="text-[11px] text-slate-300">Legal metrology assistant</p>
       </div>
       <button id="assistant-close" type="button" class="w-8 h-8 rounded-full hover:bg-white/10 text-lg leading-none">×</button>
@@ -459,7 +449,7 @@
         id="assistant-input"
         type="text"
         maxlength="1200"
-        placeholder="Ask PackCheck AI..."
+        placeholder="Ask LabelIQ..."
         class="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4638d9]/20 focus:border-[#4638d9]"
       />
       <button type="submit" class="px-4 py-2 rounded-xl bg-[#4638d9] text-white text-sm font-semibold hover:bg-[#3a2ec2] disabled:opacity-50">Send</button>
@@ -468,7 +458,7 @@
 
   <button
     id="assistant-toggle"
-    aria-label="Open PackCheck AI assistant"
+    aria-label="Open LabelIQ assistant"
     class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#181d27] text-white flex items-center justify-center font-bold text-sm shadow-md hover:bg-black transition-colors z-50"
   >
     AI

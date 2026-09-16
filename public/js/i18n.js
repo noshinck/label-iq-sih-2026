@@ -1,5 +1,5 @@
 (function () {
-  const storageKey = 'packcheck.language';
+  const storageKey = 'labeliq.language';
   const fallbackLocale = 'en';
   let dictionary = {};
 
@@ -77,7 +77,7 @@
     document.querySelectorAll('[data-language-select]').forEach((select) => {
       select.value = language;
     });
-    window.dispatchEvent(new CustomEvent('packcheck:languagechange', { detail: { language } }));
+    window.dispatchEvent(new CustomEvent('labeliq:languagechange', { detail: { language } }));
   }
 
   async function setLanguage(language) {
@@ -100,7 +100,7 @@
     setLanguage(selectedLanguage());
   });
 
-  window.PackCheckI18n = {
+  window.LabelIQI18n = {
     setLanguage,
     selectedLanguage,
     translate

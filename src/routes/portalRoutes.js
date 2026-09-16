@@ -178,7 +178,7 @@ async function buildLegalDashboardData(user, sectionName) {
 router.get('/', (req, res) => {
   res.render('landing', {
     data: {
-      brandName: 'PackCheck AI'
+      brandName: 'LabelIQ'
     }
   });
 });
