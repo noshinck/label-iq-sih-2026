@@ -165,14 +165,28 @@
       </div>
       <div class="mt-8 grid gap-5 md:grid-cols-3">
         <% [
-          ['Upload photos', 'Front, back, side, top, bottom and close-up label images stay attached to one product record.'],
-          ['Extract declarations', 'The system reads package text and converts it into structured fields for review.'],
-          ['Save evidence', 'Findings point back to uploaded package images and OCR text.']
+          {
+            title: 'Upload photos',
+            description: 'Front, back, side, top, bottom and close-up label images stay attached to one product record.',
+            icon: '<path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M20 16v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3"/>'
+          },
+          {
+            title: 'Extract declarations',
+            description: 'The system reads package text and converts it into structured fields for review.',
+            icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/>'
+          },
+          {
+            title: 'Save evidence',
+            description: 'Findings point back to uploaded package images and OCR text.',
+            icon: '<path d="M9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>'
+          }
         ].forEach(card => { %>
           <div class="rounded-3xl bg-[#0b203a] p-6 shadow-sm shadow-black/20 ring-1 ring-white/10">
-            <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#2563eb] to-[#38bdf8]"></div>
-            <h3 class="mt-5 text-lg font-black text-white"><%= card[0] %></h3>
-            <p class="mt-2 text-sm leading-6 text-blue-100/65"><%= card[1] %></p>
+            <div class="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#2563eb] to-[#38bdf8] text-white shadow-lg shadow-blue-500/20">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><%- card.icon %></svg>
+            </div>
+            <h3 class="mt-5 text-lg font-black text-white"><%= card.title %></h3>
+            <p class="mt-2 text-sm leading-6 text-blue-100/65"><%= card.description %></p>
           </div>
         <% }) %>
       </div>
