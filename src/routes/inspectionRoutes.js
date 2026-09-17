@@ -273,6 +273,13 @@ router.get('/legal/inspections/:id', checkPortalAuth('legal'), async (req, res) 
 
 router.post('/legal/checks/:id/verify', checkPortalAuth('legal'), async (req, res) => {
   try {
+    if (req.body.cacheDetail) {
+      try {
+        await inspectionCacheService.hydrateInspectionDetail(JSON.parse(req.body.cacheDetail), req.session.user);
+      } catch (hydrateError) {
+        console.warn('Inspection cache hydrate before verify failed:', hydrateError.message);
+      }
+    }
     if (!req.body.status) {
       throw new Error('Choose a verification status before saving.');
     }

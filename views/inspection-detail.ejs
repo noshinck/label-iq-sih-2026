@@ -244,23 +244,25 @@
         }
 
         try {
-          if (renderedInspectionDetail && window.LabelIQInspectionCache) {
-            await LabelIQInspectionCache.hydrate(renderedInspectionDetail);
+          const formData = new FormData(form);
+          const body = new URLSearchParams(formData);
+          if (renderedInspectionDetail) {
+            body.set('cacheDetail', JSON.stringify(renderedInspectionDetail));
           }
 
           const response = await fetch(form.action, {
             method: 'POST',
-            body: new FormData(form),
+            body,
             credentials: 'same-origin',
             headers: {
               Accept: 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
               'X-Requested-With': 'fetch'
             }
           });
           const payload = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error('Could not save on the server. The visible result is still available on this device.');
 
-          const formData = new FormData(form);
           const status = formData.get('status') || '';
           const correctedValue = formData.get('correctedValue') || '';
           if (summary) summary.classList.remove('hidden');
