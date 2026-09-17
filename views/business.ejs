@@ -23,6 +23,28 @@
       }
     }
   </script>
+  <style>
+    @media (max-width: 1023px) {
+      .portal-sidebar {
+        position: fixed !important;
+        inset: 0 auto 0 0 !important;
+        width: min(20rem, calc(100vw - 2rem)) !important;
+        transform: translateX(-105%) !important;
+      }
+      .portal-sidebar.is-open {
+        transform: translateX(0) !important;
+      }
+      .portal-backdrop.is-open {
+        display: block !important;
+      }
+    }
+    @media (min-width: 1024px) {
+      .portal-sidebar {
+        position: static !important;
+        transform: none !important;
+      }
+    }
+  </style>
 </head>
 <body class="bg-[#fcfdff] text-slate-700 antialiased font-sans min-h-screen flex flex-col overflow-x-hidden">
 
@@ -49,7 +71,7 @@
           <%- include('partials/brand-logo') %>
         </a>
 
-        <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-slate-600">
+        <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-600">
           <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="nav.product">Product</a>
           <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="nav.ruleEngine">Rule Engine</a>
           <a href="#" class="hover:text-slate-900 transition-colors" data-i18n="nav.verification">Verification</a>
@@ -59,7 +81,7 @@
       <!-- Right Profile Menu with Functional Dropdown -->
       <div class="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-4 lg:gap-6">
         <%- include('partials/language-selector') %>
-        <div class="relative hidden min-w-0 sm:block" id="portal-menu-container">
+        <div class="relative hidden min-w-0 lg:block" id="portal-menu-container">
           <button 
             id="portal-btn"
             type="button"
@@ -98,13 +120,14 @@
   </header>
 
   <div class="flex flex-1 min-w-0">
-    <div id="business-sidebar-backdrop" class="hidden fixed inset-0 z-[55] bg-slate-950/45 lg:hidden"></div>
+    <div id="business-sidebar-backdrop" class="portal-backdrop hidden fixed inset-0 z-[55] bg-slate-950/45 lg:hidden"></div>
     
     <!-- Sidebar -->
     <aside
       id="business-sidebar"
-      class="fixed inset-y-0 left-0 z-[60] w-80 max-w-[calc(100vw-2rem)] -translate-x-full overflow-y-auto border-r border-slate-100 bg-white flex flex-col justify-between py-5 lg:py-6 px-4 shrink-0 shadow-2xl shadow-slate-900/20 transition-transform duration-200 ease-out lg:static lg:z-auto lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none"
+      class="portal-sidebar fixed inset-y-0 left-0 z-[60] w-80 max-w-[calc(100vw-2rem)] -translate-x-full overflow-y-auto border-r border-slate-100 bg-white flex flex-col justify-between py-5 lg:py-6 px-4 shrink-0 shadow-2xl shadow-slate-900/20 transition-transform duration-200 ease-out lg:static lg:z-auto lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none"
       aria-label="Business navigation"
+      aria-hidden="true"
     >
       <div class="space-y-6">
         <div class="flex items-center justify-between gap-3 lg:hidden">
@@ -136,7 +159,7 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav class="grid grid-cols-1 sm:grid-cols-2 lg:block lg:space-y-1 gap-2 lg:gap-0">
+        <nav class="grid grid-cols-1 lg:block lg:space-y-1 gap-2 lg:gap-0">
           <!-- Active Tab: Overview -->
           <a href="#overview" data-business-nav="Overview" class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl bg-[#f5f6ff] text-[#4638d9] font-semibold text-[14px]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -459,7 +482,12 @@
     const scanFiles = [];
     let businessDrawerHistoryPushed = false;
 
+    businessSidebar.setAttribute('aria-hidden', window.innerWidth < 1024 ? 'true' : 'false');
+
     function openBusinessMenu(pushHistory = true) {
+      businessSidebar.classList.add('is-open');
+      businessSidebar.setAttribute('aria-hidden', 'false');
+      businessSidebarBackdrop.classList.add('is-open');
       businessSidebar.classList.remove('-translate-x-full');
       businessSidebarBackdrop.classList.remove('hidden');
       document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
@@ -470,6 +498,9 @@
     }
 
     function closeBusinessMenu(fromPopState = false) {
+      businessSidebar.classList.remove('is-open');
+      businessSidebar.setAttribute('aria-hidden', 'true');
+      businessSidebarBackdrop.classList.remove('is-open');
       businessSidebar.classList.add('-translate-x-full');
       businessSidebarBackdrop.classList.add('hidden');
       document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
@@ -493,7 +524,10 @@
       if (businessDrawerHistoryPushed) closeBusinessMenu(true);
     });
     window.addEventListener('resize', () => {
-      if (window.innerWidth >= 1024) closeBusinessMenu(true);
+      if (window.innerWidth >= 1024) {
+        closeBusinessMenu(true);
+        businessSidebar.setAttribute('aria-hidden', 'false');
+      }
     });
 
     businessSidebarCollapse?.addEventListener('click', () => {
