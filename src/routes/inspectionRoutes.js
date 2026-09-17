@@ -291,7 +291,7 @@ router.post('/legal/checks/:id/verify', checkPortalAuth('legal'), async (req, re
     return res.redirect(redirectTo);
   } catch (error) {
     if (wantsJson(req)) {
-      return res.status(404).json({ error: error.message });
+      return res.status(400).json({ error: error.message || 'Could not save officer verification.' });
     }
     return redirectWithError(res, req.get('referer') || '/legal', error.message);
   }

@@ -216,22 +216,33 @@ async function getInspectionDetail(inspectionId) {
 }
 
 async function verifyCheck({ checkId, officer, status, correctedValue, remark }) {
-  const check = await db.update('compliance_checks', checkId, {
-    officer_status: status,
+  const existing = await db.findOne('compliance_checks', (row) => row.id === checkId);
+  if (!existing) {
+    throw new Error('Inspection check not found. Reopen the inspection and try again.');
+  }
+
+  const officerStatus = status || 'needs_verification';
+  const updatedCheck = await db.update('compliance_checks', checkId, {
+    officer_status: officerStatus,
     officer_corrected_value: correctedValue || null,
     officer_remark: remark || null,
-    officer_user_id: officer.id,
+    officer_user_id: officer?.id || null,
     officer_timestamp: new Date().toISOString()
   });
 
-  if (!check) {
-    throw new Error('Inspection check not found.');
-  }
+  const check = updatedCheck || {
+    ...existing,
+    officer_status: officerStatus,
+    officer_corrected_value: correctedValue || null,
+    officer_remark: remark || null,
+    officer_user_id: officer?.id || null,
+    officer_timestamp: new Date().toISOString()
+  };
 
   await db.audit('inspection.check_verified', officer, {
     check_id: checkId,
     inspection_id: check.inspection_id,
-    officer_status: status
+    officer_status: officerStatus
   });
 
   return check;
