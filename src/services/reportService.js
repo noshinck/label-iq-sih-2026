@@ -1,12 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { execFile } = require('child_process');
 const db = require('./database');
 const inspectionService = require('./inspectionService');
 const config = require('./config');
 
-const reportsDir = path.join(__dirname, '..', '..', 'output', 'reports');
-const tmpDir = path.join(__dirname, '..', '..', 'tmp', 'reports');
+const reportsDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'labeliq-reports')
+  : path.join(__dirname, '..', '..', 'output', 'reports');
+const tmpDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'labeliq-report-inputs')
+  : path.join(__dirname, '..', '..', 'tmp', 'reports');
 
 function generateFiles(detail, pdfPath, docxPath) {
   return new Promise((resolve, reject) => {

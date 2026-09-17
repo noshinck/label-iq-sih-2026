@@ -281,25 +281,37 @@ router.post('/legal/checks/:id/verify', checkPortalAuth('legal'), async (req, re
 });
 
 router.post('/legal/inspections/:id/finalize', checkPortalAuth('legal'), async (req, res) => {
-  await inspectionService.finalizeInspection(req.params.id, req.session.user);
-  res.redirect(`/legal/inspections/${req.params.id}`);
+  try {
+    await inspectionService.finalizeInspection(req.params.id, req.session.user);
+    res.redirect(`/legal/inspections/${req.params.id}`);
+  } catch (error) {
+    const detail = await inspectionService.getInspectionDetail(req.params.id);
+    if (detail) {
+      return renderInspectionDetail(req, res, {
+        detail,
+        error: error.message,
+        status: 400
+      });
+    }
+    return redirectWithError(res, '/legal?section=case-queue', `${error.message} Please reopen the inspection from the portal.`);
+  }
 });
 
 router.get('/legal/inspections/:id/report.pdf', checkPortalAuth('legal'), async (req, res) => {
   try {
     const { pdfPath } = await reportService.generateInspectionReport(req.params.id, req.session.user);
-    res.download(pdfPath);
+    return res.download(pdfPath);
   } catch (error) {
-    res.status(500).send(error.message);
+    return redirectWithError(res, `/legal/inspections/${req.params.id}`, `PDF download failed: ${error.message}`);
   }
 });
 
 router.get('/legal/inspections/:id/report.docx', checkPortalAuth('legal'), async (req, res) => {
   try {
     const { docxPath } = await reportService.generateInspectionReport(req.params.id, req.session.user);
-    res.download(docxPath);
+    return res.download(docxPath);
   } catch (error) {
-    res.status(500).send(error.message);
+    return redirectWithError(res, `/legal/inspections/${req.params.id}`, `DOCX download failed: ${error.message}`);
   }
 });
 
