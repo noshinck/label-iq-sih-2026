@@ -12,114 +12,139 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] }
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: { labelnavy: '#071b3a', labelblue: '#2563eb', labelcyan: '#06b6d4' }
         }
       }
     }
   </script>
+  <style>
+    .auth-orb {
+      position: absolute;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 9999px;
+      opacity: 0.16;
+      filter: blur(48px);
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.8), rgba(37, 99, 235, 0.22) 58%, transparent 72%);
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .auth-orb { transform: none !important; }
+    }
+  </style>
 </head>
-<body class="bg-[#FAFBFD] font-sans text-slate-800 min-h-screen flex items-center justify-center px-4 py-6 sm:p-6 antialiased overflow-x-hidden">
-
-  <div class="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-5 sm:p-10 space-y-5 sm:space-y-6">
-    
-    <!-- Header -->
-    <div class="flex flex-col items-center text-center space-y-2">
-      <div class="flex justify-center">
-        <img src="/assets/labeliq-logo.png" alt="LabelIQ" class="h-14 w-auto object-contain" />
-      </div>
-      <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Create Account</h1>
-      <p class="text-sm text-slate-500">
-        Registering for: <strong class="text-[#4338CA] uppercase"><%= portal %> Portal</strong>
-      </p>
-    </div>
-
-    <!-- Portal Switcher Tabs -->
-    <div class="grid grid-cols-3 rounded-xl bg-slate-100 p-1 text-xs font-semibold text-slate-600">
-      <a href="/signup?portal=consumer" class="flex-1 py-2 text-center rounded-lg <%= portal === 'consumer' ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900' %>">Consumer</a>
-      <a href="/signup?portal=business" class="flex-1 py-2 text-center rounded-lg <%= portal === 'business' ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900' %>">Business</a>
-      <a href="/signup?portal=legal" class="flex-1 py-2 text-center rounded-lg <%= portal === 'legal' ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900' %>">Legal</a>
-    </div>
-
-    <!-- Google Sign Up Button -->
-    <% if (['consumer', 'business', 'legal'].includes(portal)) { %>
-      <div class="space-y-4">
-        <%- include('partials/google-oauth') %>
-
-        <div class="flex items-center gap-3">
-          <div class="h-px flex-1 bg-slate-200"></div>
-          <span class="shrink-0 text-[10px] sm:text-xs uppercase text-slate-400 font-semibold tracking-wider">or sign up with email</span>
-          <div class="h-px flex-1 bg-slate-200"></div>
-        </div>
-      </div>
-    <% } %>
-
-    <!-- Error Alert -->
-    <% if (error) { %>
-      <div class="p-3 rounded-xl bg-red-50 border border-red-100 text-xs text-red-600 font-medium text-center">
-        <%= error %>
-      </div>
-    <% } %>
-
-    <!-- Email Sign Up Form -->
-    <form action="/signup" method="POST" class="space-y-4">
-      <input type="hidden" name="portal" value="<%= portal %>" />
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Username</label>
-        <input 
-          type="text" 
-          name="username" 
-          required 
-          placeholder="Choose a username"
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#4338CA] focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
-        />
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Password</label>
-        <input 
-          type="password" 
-          name="password" 
-          required 
-          placeholder="Create password"
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#4338CA] focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
-        />
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Confirm Password</label>
-        <input 
-          type="password" 
-          name="confirmPassword" 
-          required 
-          placeholder="Confirm password"
-          class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#4338CA] focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
-        />
-      </div>
-
-      <button 
-        type="submit" 
-        class="w-full py-3 rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white font-semibold text-sm shadow-md shadow-indigo-600/20 transition-all mt-2"
-      >
-        Register Account
-      </button>
-    </form>
-
-    <!-- Sign In Redirect -->
-    <div class="text-center pt-2 border-t border-slate-100">
-      <p class="text-xs text-slate-500">
-        Already have an account? 
-        <a href="/signin?portal=<%= portal %>" class="font-semibold text-[#4338CA] hover:underline">Sign In</a>
-      </p>
-    </div>
-
+<body class="min-h-screen overflow-x-hidden bg-[#f8fbff] font-sans text-slate-800 antialiased">
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="auth-orb left-[5%] top-[10%]" data-auth-orb></div>
+    <div class="auth-orb right-[9%] top-[20%]" data-auth-orb></div>
+    <div class="auth-orb bottom-[5%] left-[38%]" data-auth-orb></div>
   </div>
 
+  <main class="relative mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_460px] lg:items-center lg:px-10">
+    <section class="flex min-h-[34vh] flex-col justify-between rounded-[2rem] border border-white/70 bg-white/55 px-5 py-5 shadow-sm shadow-slate-200/70 backdrop-blur sm:px-8 lg:min-h-[calc(100vh-5rem)] lg:py-8">
+      <div class="flex items-center justify-between gap-4">
+        <a href="/" class="inline-flex items-center">
+          <img src="/assets/labeliq-logo.png" alt="LabelIQ" class="h-12 w-auto object-contain" />
+        </a>
+        <%- include('partials/language-selector') %>
+      </div>
+
+      <div class="max-w-2xl py-10 lg:py-0">
+        <p class="text-sm font-bold uppercase tracking-[0.24em] text-labelblue" data-auth-text="subtitle">Smart Legal Metrology Compliance</p>
+        <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-labelnavy sm:text-5xl lg:text-6xl" data-auth-text="headline">Scan. Understand. Validate. Verify.</h1>
+        <p class="mt-5 max-w-xl text-base leading-7 text-slate-600" data-auth-text="signup_message">Start with the right portal. Business details can be completed after signup.</p>
+      </div>
+
+      <div class="rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm leading-6 text-slate-600">
+        <% if (portal === 'legal') { %>
+          <strong class="text-labelnavy" data-auth-text="officer_auth_required">Officer registration requires authorization. Please contact the administrator for access.</strong>
+        <% } else if (portal === 'business') { %>
+          <strong class="text-labelnavy" data-auth-text="business_after_signup">Business profile details can be completed after account creation.</strong>
+        <% } else { %>
+          <strong class="text-labelnavy">Public accounts can scan labels and understand results in simple language.</strong>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="w-full">
+      <div class="rounded-[1.75rem] border border-slate-200/80 bg-white/95 p-5 shadow-xl shadow-slate-200/60 sm:p-7">
+        <div class="mb-6">
+          <p class="text-sm font-semibold text-labelblue">LabelIQ</p>
+          <h2 class="mt-2 text-2xl font-bold tracking-tight text-labelnavy" data-auth-text="signup_title">Create your account</h2>
+          <p class="mt-2 text-sm text-slate-500"><span data-auth-text="portal">Portal</span>: <strong class="text-labelblue uppercase"><%= portal === 'legal' ? 'OFFICER' : (portal === 'consumer' ? 'PUBLIC' : portal) %></strong></p>
+        </div>
+
+        <div class="grid grid-cols-3 rounded-2xl bg-slate-100 p-1 text-xs font-bold text-slate-600">
+          <a href="/signup?portal=consumer" class="rounded-xl py-2.5 text-center transition <%= portal === 'consumer' ? 'bg-white text-labelnavy shadow-sm' : 'hover:text-labelnavy' %>" data-auth-text="public">Public</a>
+          <a href="/signup?portal=business" class="rounded-xl py-2.5 text-center transition <%= portal === 'business' ? 'bg-white text-labelnavy shadow-sm' : 'hover:text-labelnavy' %>" data-auth-text="business">Business</a>
+          <a href="/signup?portal=legal" class="rounded-xl py-2.5 text-center transition <%= portal === 'legal' ? 'bg-white text-labelnavy shadow-sm' : 'hover:text-labelnavy' %>" data-auth-text="officer">Officer</a>
+        </div>
+
+        <% if (error) { %>
+          <div class="mt-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
+            <%= error %>
+          </div>
+        <% } %>
+
+        <% if (portal !== 'legal') { %>
+          <div class="mt-5 space-y-4">
+            <%- include('partials/google-oauth') %>
+            <div class="flex items-center gap-3">
+              <div class="h-px flex-1 bg-slate-200"></div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400" data-auth-text="or_email">or use email</span>
+              <div class="h-px flex-1 bg-slate-200"></div>
+            </div>
+          </div>
+
+          <form action="/signup" method="POST" class="mt-5 space-y-4" data-auth-form>
+            <input type="hidden" name="portal" value="<%= portal %>" />
+            <div>
+              <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600" data-auth-text="full_name">Full Name</label>
+              <input type="text" name="fullName" autocomplete="name" class="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-labelblue focus:ring-4 focus:ring-blue-100" />
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600" data-auth-text="email">Email</label>
+              <input type="email" name="username" required autocomplete="email" class="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-labelblue focus:ring-4 focus:ring-blue-100" />
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600" data-auth-text="phone">Phone</label>
+              <input type="tel" name="phone" autocomplete="tel" class="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-labelblue focus:ring-4 focus:ring-blue-100" />
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600" data-auth-text="password">Password</label>
+                <input type="password" name="password" required autocomplete="new-password" class="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-labelblue focus:ring-4 focus:ring-blue-100" />
+              </div>
+              <div>
+                <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600" data-auth-text="confirm_password">Confirm Password</label>
+                <input type="password" name="confirmPassword" required autocomplete="new-password" class="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-labelblue focus:ring-4 focus:ring-blue-100" />
+              </div>
+            </div>
+            <button type="submit" class="flex h-12 w-full items-center justify-center rounded-2xl bg-labelnavy text-sm font-bold text-white shadow-lg shadow-slate-900/15 transition hover:bg-[#0b2854] disabled:cursor-wait disabled:opacity-70" data-auth-submit data-auth-text="create_account">Create Account</button>
+          </form>
+        <% } else { %>
+          <div class="mt-5 rounded-2xl border border-amber-100 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-900">
+            Officer access is issued by an authorized administrator. Sign in with an approved officer account or contact your department admin.
+          </div>
+        <% } %>
+
+        <p class="mt-5 text-center text-sm text-slate-500">
+          <span data-auth-text="have_account">Already have an account?</span>
+          <a href="/signin?portal=<%= portal %>" class="font-bold text-labelblue hover:underline" data-auth-text="sign_in">Sign In</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script>
     window.LABELIQ_SUPABASE_URL = <%- JSON.stringify(supabase.url || '') %>;
     window.LABELIQ_SUPABASE_PUBLISHABLE_KEY = <%- JSON.stringify(supabase.publishableKey || '') %>;
   </script>
   <script src="/js/supabase-oauth.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/auth-ui.js"></script>
 </body>
 </html>
