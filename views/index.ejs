@@ -26,13 +26,13 @@
     }
   </script>
 </head>
-<body class="bg-white text-slate-700 antialiased font-sans flex flex-col min-h-screen relative">
+<body class="bg-white text-slate-700 antialiased font-sans flex flex-col min-h-screen relative overflow-x-hidden">
 
   <!-- Navbar -->
   <header class="w-full border-b border-slate-100 bg-white sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-6 sm:px-12 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 min-h-16 sm:min-h-20 py-3 flex flex-wrap items-center justify-between gap-3">
       
-      <div class="flex items-center gap-10">
+      <div class="flex min-w-0 items-center gap-6 lg:gap-10">
         <!-- Logo -->
         <a href="/" class="flex items-center">
           <%- include('partials/brand-logo') %>
@@ -47,16 +47,16 @@
       </div>
 
       <!-- Right Action Items with Working Dropdown -->
-      <div class="flex items-center gap-6">
+      <div class="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-4 lg:gap-6">
         <%- include('partials/language-selector') %>
-        <div class="relative" id="portal-menu-container">
+        <div class="relative hidden min-w-0 sm:block" id="portal-menu-container">
           <!-- Trigger Button -->
           <button 
             id="portal-btn"
             type="button"
-            class="flex items-center gap-1.5 text-[15px] font-medium text-slate-700 hover:text-slate-900 focus:outline-none transition-colors"
+            class="flex min-w-0 items-center gap-1.5 text-[15px] font-medium text-slate-700 hover:text-slate-900 focus:outline-none transition-colors"
           >
-            <span>Consumer Portal</span>
+            <span class="truncate sm:whitespace-nowrap">Consumer Portal</span>
             <svg id="dropdown-chevron" class="w-4 h-4 text-slate-400 stroke-[2.2] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
@@ -93,7 +93,7 @@
           </div>
         </div>
 
-        <a href="/signout?portal=consumer" class="px-5 py-2.5 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[15px] transition-colors shadow-sm" data-i18n="action.signOut">
+        <a href="/signout?portal=consumer" class="shrink-0 px-3 sm:px-5 py-2.5 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[15px] transition-colors shadow-sm whitespace-nowrap" data-i18n="action.signOut">
           Sign Out
         </a>
       </div>
@@ -102,14 +102,14 @@
   </header>
 
   <!-- Hero Container -->
-  <main class="max-w-4xl mx-auto w-full px-6 pt-16 pb-28 flex-1">
+  <main class="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-10 sm:pt-16 pb-24 flex-1">
     
     <!-- Title & Subtitle -->
     <div class="text-center">
-      <h1 class="text-5xl font-extrabold text-[#0f172a] tracking-tight leading-[1.15]">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-[#0f172a] tracking-tight leading-[1.15]">
         Package Compliance,<br />Simplified.
       </h1>
-      <p class="mt-4 text-[17px] text-slate-500 font-normal">
+      <p class="mt-4 text-base sm:text-[17px] text-slate-500 font-normal">
         Instant Legal Metrology (Packaged Commodities) screening — free for consumers.
       </p>
     </div>
@@ -118,7 +118,7 @@
       <!-- Drag and Drop Box -->
       <div
         id="dropzone"
-        class="mt-12 rounded-2xl border-2 border-dashed border-slate-200/90 bg-white py-14 px-8 flex flex-col items-center justify-center transition-all cursor-pointer hover:border-slate-300"
+        class="mt-8 sm:mt-12 rounded-2xl border-2 border-dashed border-slate-200/90 bg-white py-10 sm:py-14 px-4 sm:px-8 flex flex-col items-center justify-center transition-all cursor-pointer hover:border-slate-300"
         onclick="document.getElementById('fileInput').click()"
       >
         <input type="file" id="fileInput" name="photos" class="hidden" accept=".jpg,.jpeg,.png" multiple />
@@ -138,7 +138,7 @@
 
         <button
           type="button"
-          class="mt-6 px-6 py-2 border border-slate-200 rounded-lg text-[13px] font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors shadow-sm"
+          class="mt-6 w-full sm:w-auto px-6 py-3 sm:py-2 border border-slate-200 rounded-lg text-[13px] font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors shadow-sm"
         >
           Browse File
         </button>
@@ -149,20 +149,20 @@
       </div>
 
     <!-- Category Pills -->
-    <div class="mt-8 flex flex-wrap items-center gap-2">
+    <div class="mt-8 -mx-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
       <% data.categories.forEach((category, i) => { %>
-        <button class="px-5 py-2 rounded-full text-[14px] font-medium transition-colors <%= i === 0 ? 'border border-[#4638d9] text-[#4638d9] bg-indigo-50/20' : 'border border-slate-200 text-slate-600 hover:border-slate-300' %>">
+        <button type="button" class="shrink-0 px-5 py-2 rounded-full text-[14px] font-medium transition-colors <%= i === 0 ? 'border border-[#4638d9] text-[#4638d9] bg-indigo-50/20' : 'border border-slate-200 text-slate-600 hover:border-slate-300' %>">
           <%= category %>
         </button>
       <% }) %>
     </div>
 
     <!-- Actions -->
-    <div class="mt-8 flex items-center gap-6">
-      <button id="scanSubmit" type="submit" disabled class="px-6 py-3 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[15px] shadow-sm transition-colors disabled:opacity-50">
+    <div class="mt-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+      <button id="scanSubmit" type="submit" disabled class="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#4638d9] hover:bg-[#3a2ec2] text-white font-medium text-[15px] shadow-sm transition-colors disabled:opacity-50">
         Analyze Product
       </button>
-      <a href="#" class="text-[14px] text-slate-500 hover:text-slate-700 underline underline-offset-4 decoration-slate-300 transition-colors">
+      <a href="#" class="text-center sm:text-left text-[14px] text-slate-500 hover:text-slate-700 underline underline-offset-4 decoration-slate-300 transition-colors">
         Use sample label
       </a>
     </div>

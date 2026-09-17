@@ -43,7 +43,7 @@
     }
   </style>
 </head>
-<body class="bg-[#f7faff] text-ink antialiased font-sans">
+<body class="bg-[#f7faff] text-ink antialiased font-sans overflow-x-hidden">
   <header class="fixed inset-x-0 top-0 z-50 px-3 pt-3">
     <div class="mx-auto max-w-7xl rounded-2xl border soft-border bg-white/88 px-4 py-3 shadow-sm shadow-blue-950/5 backdrop-blur-xl sm:px-6">
       <div class="flex items-center justify-between gap-4">
@@ -74,7 +74,7 @@
         <div class="grid min-h-[560px] items-center gap-10 lg:grid-cols-[.92fr_1.08fr]">
           <div class="relative z-10 max-w-2xl">
             <p class="text-[11px] font-black uppercase tracking-[0.18em] text-[#2563eb]">AI package compliance for Legal Metrology</p>
-            <h1 class="mt-5 text-5xl font-black leading-[.98] tracking-tight text-ink sm:text-7xl">
+            <h1 class="mt-5 text-4xl font-black leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-7xl">
               Scan labels.<br>
               Catch issues.<br>
               <span class="text-[#2563eb]">Prove it.</span>
@@ -98,9 +98,9 @@
             </div>
           </div>
 
-          <div class="relative min-h-[520px]">
-            <div class="blue-glow absolute -bottom-10 left-20 h-52 w-72"></div>
-            <div class="tilt-card absolute right-0 top-12 w-[78%] rounded-[26px] border soft-border bg-white p-5 shadow-2xl shadow-blue-950/10">
+          <div class="relative min-h-0 lg:min-h-[520px]">
+            <div class="blue-glow absolute -bottom-10 left-20 hidden h-52 w-72 lg:block"></div>
+            <div class="tilt-card relative w-full rounded-[26px] border soft-border bg-white p-4 shadow-2xl shadow-blue-950/10 sm:p-5 lg:absolute lg:right-0 lg:top-12 lg:w-[78%]">
               <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <p class="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Inspection preview</p>
@@ -108,7 +108,7 @@
                 </div>
                 <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-[#2563eb]">OCR active</span>
               </div>
-              <div class="mt-5 grid grid-cols-[.85fr_1fr] gap-4">
+              <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[.85fr_1fr]">
                 <div class="rounded-3xl bg-[#f6f9ff] p-3 ring-1 ring-blue-100/70">
                   <img src="/assets/mountain-dew-can.png" alt="Mountain Dew back-label sample package used for compliance preview" class="product-shadow mx-auto max-h-[355px] object-contain" />
                 </div>
@@ -128,9 +128,9 @@
               </div>
             </div>
 
-            <div class="absolute bottom-8 left-0 w-[58%] rounded-3xl border soft-border bg-white p-5 shadow-2xl shadow-blue-950/10">
+            <div class="relative mt-4 w-full rounded-3xl border soft-border bg-white p-5 shadow-2xl shadow-blue-950/10 lg:absolute lg:bottom-8 lg:left-0 lg:mt-0 lg:w-[58%]">
               <p class="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Compliance result</p>
-              <div class="mt-4 flex items-center justify-between">
+              <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p class="text-2xl font-black text-ink">Needs Verification</p>
                   <p class="mt-1 text-sm text-slate-500">2 fields require officer review</p>

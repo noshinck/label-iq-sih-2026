@@ -31,7 +31,20 @@
     <div class="px-4 sm:px-6 lg:px-8 min-h-16 py-3 flex flex-wrap items-center justify-between gap-3">
       
       <!-- Brand & Links -->
-      <div class="flex min-w-0 items-center gap-6 lg:gap-10">
+      <div class="flex min-w-0 items-center gap-3 lg:gap-10">
+        <button
+          id="business-menu-open"
+          type="button"
+          class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 lg:hidden"
+          aria-label="Open menu"
+          aria-controls="business-sidebar"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
         <a href="/" class="flex items-center">
           <%- include('partials/brand-logo') %>
         </a>
@@ -46,7 +59,7 @@
       <!-- Right Profile Menu with Functional Dropdown -->
       <div class="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-4 lg:gap-6">
         <%- include('partials/language-selector') %>
-        <div class="relative min-w-0" id="portal-menu-container">
+        <div class="relative hidden min-w-0 sm:block" id="portal-menu-container">
           <button 
             id="portal-btn"
             type="button"
@@ -84,19 +97,38 @@
     </div>
   </header>
 
-  <div class="flex flex-1 flex-col lg:flex-row min-w-0">
+  <div class="flex flex-1 min-w-0">
+    <div id="business-sidebar-backdrop" class="hidden fixed inset-0 z-[55] bg-slate-950/45 lg:hidden"></div>
     
     <!-- Sidebar -->
-    <aside class="w-full lg:w-64 border-b lg:border-b-0 lg:border-r border-slate-100 bg-white flex flex-col justify-between py-5 lg:py-6 px-4 shrink-0">
+    <aside
+      id="business-sidebar"
+      class="fixed inset-y-0 left-0 z-[60] w-80 max-w-[calc(100vw-2rem)] -translate-x-full overflow-y-auto border-r border-slate-100 bg-white flex flex-col justify-between py-5 lg:py-6 px-4 shrink-0 shadow-2xl shadow-slate-900/20 transition-transform duration-200 ease-out lg:static lg:z-auto lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none"
+      aria-label="Business navigation"
+    >
       <div class="space-y-6">
+        <div class="flex items-center justify-between gap-3 lg:hidden">
+          <span class="text-sm font-bold text-slate-900">Business Menu</span>
+          <button
+            id="business-menu-close"
+            type="button"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50"
+            aria-label="Close menu"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
         
         <!-- Company Header -->
         <div class="flex items-center justify-between gap-3 px-3 py-1">
-          <div class="min-w-0">
+          <div class="min-w-0" data-sidebar-label>
             <h2 class="text-sm font-bold text-slate-900 leading-tight truncate"><%= data.company.name %></h2>
             <p class="text-xs text-slate-400 mt-0.5 truncate"><%= data.company.role %></p>
           </div>
-          <button class="text-slate-400 hover:text-slate-600">
+          <button id="business-sidebar-collapse" type="button" class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600" aria-label="Collapse sidebar" aria-expanded="true">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -113,7 +145,7 @@
               <rect x="14" y="14" width="7" height="7" rx="1"></rect>
               <rect x="3" y="14" width="7" height="7" rx="1"></rect>
             </svg>
-            <span class="truncate">Overview</span>
+            <span class="truncate" data-sidebar-label>Overview</span>
           </a>
 
           <a href="#product-catalog" data-business-nav="Product Catalog" class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
@@ -122,14 +154,14 @@
               <line x1="7" y1="8" x2="17" y2="8"></line>
               <line x1="7" y1="12" x2="13" y2="12"></line>
             </svg>
-            <span class="truncate">Product Catalog</span>
+            <span class="truncate" data-sidebar-label>Product Catalog</span>
           </a>
 
           <a href="#artwork-precheck" data-open-business-scan data-mode="Artwork Pre-Check" class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            <span class="truncate">Artwork Pre-Check</span>
+            <span class="truncate" data-sidebar-label>Artwork Pre-Check</span>
           </a>
 
           <a href="#scan-commodity" data-open-business-scan data-mode="Scan Commodity" class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
@@ -140,7 +172,7 @@
               <path d="M7 20H5a1 1 0 0 1-1-1v-2"></path>
               <rect x="8" y="8" width="8" height="8" rx="2"></rect>
             </svg>
-            <span class="truncate">Scan Commodity</span>
+            <span class="truncate" data-sidebar-label>Scan Commodity</span>
           </a>
 
           <a href="#batch-audits" data-business-notice="Batch audit history is shown in the product table. Use search or export to review the current audit set." class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
@@ -149,7 +181,7 @@
               <line x1="4" y1="12" x2="20" y2="12"></line>
               <line x1="4" y1="18" x2="20" y2="18"></line>
             </svg>
-            <span class="truncate">Batch Audits</span>
+            <span class="truncate" data-sidebar-label>Batch Audits</span>
           </a>
 
           <a href="#correction-history" data-business-notice="Correction history is audit-ready. Open a scanned inspection result to accept, edit, reject, or add remarks to extracted fields." class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
@@ -157,7 +189,7 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            <span class="truncate">Correction History</span>
+            <span class="truncate" data-sidebar-label>Correction History</span>
           </a>
 
           <a href="#settings" data-business-notice="Business settings are connected to the signed-in portal session and company profile." class="business-nav-link flex min-w-0 items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-[14px] transition-colors">
@@ -165,13 +197,13 @@
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            <span class="truncate">Settings</span>
+            <span class="truncate" data-sidebar-label>Settings</span>
           </a>
         </nav>
       </div>
 
       <!-- Verification Footer -->
-      <div class="px-3 pt-6 border-t border-slate-100 text-xs text-slate-400 space-y-1">
+      <div class="px-3 pt-6 border-t border-slate-100 text-xs text-slate-400 space-y-1" data-sidebar-label>
         <p class="break-words">GSTIN: <%= data.company.gstin %></p>
         <p class="flex items-center gap-1 text-slate-500 font-medium">
           Verified Manufacturer
@@ -405,6 +437,11 @@
     const portalBtn = document.getElementById('portal-btn');
     const portalDropdown = document.getElementById('portal-dropdown');
     const dropdownChevron = document.getElementById('dropdown-chevron');
+    const businessMenuOpen = document.getElementById('business-menu-open');
+    const businessMenuClose = document.getElementById('business-menu-close');
+    const businessSidebar = document.getElementById('business-sidebar');
+    const businessSidebarBackdrop = document.getElementById('business-sidebar-backdrop');
+    const businessSidebarCollapse = document.getElementById('business-sidebar-collapse');
     const productSearch = document.getElementById('business-product-search');
     const productCount = document.getElementById('business-product-count');
     const productRows = Array.from(document.querySelectorAll('.business-product-row'));
@@ -420,6 +457,52 @@
     const scanClose = document.getElementById('business-scan-close');
     const scanCancel = document.getElementById('business-scan-cancel');
     const scanFiles = [];
+    let businessDrawerHistoryPushed = false;
+
+    function openBusinessMenu(pushHistory = true) {
+      businessSidebar.classList.remove('-translate-x-full');
+      businessSidebarBackdrop.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+      if (pushHistory && window.innerWidth < 1024 && !businessDrawerHistoryPushed) {
+        history.pushState({ businessMenuOpen: true }, '');
+        businessDrawerHistoryPushed = true;
+      }
+    }
+
+    function closeBusinessMenu(fromPopState = false) {
+      businessSidebar.classList.add('-translate-x-full');
+      businessSidebarBackdrop.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+      if (!fromPopState && businessDrawerHistoryPushed && window.innerWidth < 1024) {
+        businessDrawerHistoryPushed = false;
+        history.back();
+        return;
+      }
+      businessDrawerHistoryPushed = false;
+    }
+
+    businessMenuOpen?.addEventListener('click', () => openBusinessMenu());
+    businessMenuClose?.addEventListener('click', () => closeBusinessMenu());
+    businessSidebarBackdrop?.addEventListener('click', () => closeBusinessMenu());
+    businessSidebar?.querySelectorAll('a, button[data-open-business-scan], a[data-business-notice]').forEach((item) => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth < 1024) closeBusinessMenu(true);
+      });
+    });
+    window.addEventListener('popstate', () => {
+      if (businessDrawerHistoryPushed) closeBusinessMenu(true);
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) closeBusinessMenu(true);
+    });
+
+    businessSidebarCollapse?.addEventListener('click', () => {
+      const collapsed = businessSidebar.classList.toggle('lg:w-20');
+      businessSidebar.classList.toggle('lg:w-64', !collapsed);
+      businessSidebarCollapse.setAttribute('aria-expanded', String(!collapsed));
+      businessSidebar.querySelectorAll('[data-sidebar-label]').forEach((item) => item.classList.toggle('lg:hidden', collapsed));
+      businessSidebar.querySelectorAll('.business-nav-link').forEach((item) => item.classList.toggle('lg:justify-center', collapsed));
+    });
 
     function showBusinessNotice(message) {
       businessNotice.textContent = message;
