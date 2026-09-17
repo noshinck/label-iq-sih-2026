@@ -42,6 +42,20 @@
       .portal-sidebar {
         position: static !important;
         transform: none !important;
+        transition: width 240ms ease;
+      }
+      .portal-sidebar.is-collapsed {
+        width: 5rem !important;
+      }
+      .portal-sidebar.is-collapsed [data-sidebar-label],
+      .portal-sidebar.is-collapsed nav a span {
+        display: none !important;
+      }
+      .portal-sidebar.is-collapsed nav a {
+        justify-content: center !important;
+      }
+      .portal-sidebar.is-collapsed [data-sidebar-collapse-icon] {
+        transform: rotate(180deg);
       }
     }
   </style>
@@ -152,7 +166,7 @@
             <p class="text-xs text-slate-400 mt-0.5 truncate"><%= data.company.role %></p>
           </div>
           <button id="business-sidebar-collapse" type="button" class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600" aria-label="Collapse sidebar" aria-expanded="true">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg data-sidebar-collapse-icon class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -531,11 +545,9 @@
     });
 
     businessSidebarCollapse?.addEventListener('click', () => {
-      const collapsed = businessSidebar.classList.toggle('lg:w-20');
-      businessSidebar.classList.toggle('lg:w-64', !collapsed);
+      const collapsed = businessSidebar.classList.toggle('is-collapsed');
       businessSidebarCollapse.setAttribute('aria-expanded', String(!collapsed));
-      businessSidebar.querySelectorAll('[data-sidebar-label]').forEach((item) => item.classList.toggle('lg:hidden', collapsed));
-      businessSidebar.querySelectorAll('.business-nav-link').forEach((item) => item.classList.toggle('lg:justify-center', collapsed));
+      businessSidebarCollapse.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
     });
 
     function showBusinessNotice(message) {

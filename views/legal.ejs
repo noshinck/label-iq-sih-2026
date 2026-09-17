@@ -42,6 +42,20 @@
       .portal-sidebar {
         position: static !important;
         transform: none !important;
+        transition: width 240ms ease;
+      }
+      .portal-sidebar.is-collapsed {
+        width: 5rem !important;
+      }
+      .portal-sidebar.is-collapsed [data-sidebar-label],
+      .portal-sidebar.is-collapsed nav a span {
+        display: none !important;
+      }
+      .portal-sidebar.is-collapsed nav a {
+        justify-content: center !important;
+      }
+      .portal-sidebar.is-collapsed [data-sidebar-collapse-icon] {
+        transform: rotate(180deg);
       }
     }
   </style>
@@ -171,7 +185,7 @@
             </div>
           </div>
           <button id="legal-sidebar-collapse" type="button" class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600" aria-label="Collapse sidebar" aria-expanded="true">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg data-sidebar-collapse-icon class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -589,11 +603,9 @@
     });
 
     legalSidebarCollapse?.addEventListener('click', () => {
-      const collapsed = legalSidebar.classList.toggle('lg:w-20');
-      legalSidebar.classList.toggle('lg:w-64', !collapsed);
+      const collapsed = legalSidebar.classList.toggle('is-collapsed');
       legalSidebarCollapse.setAttribute('aria-expanded', String(!collapsed));
-      legalSidebar.querySelectorAll('[data-sidebar-label]').forEach((item) => item.classList.toggle('lg:hidden', collapsed));
-      legalSidebar.querySelectorAll('nav a').forEach((item) => item.classList.toggle('lg:justify-center', collapsed));
+      legalSidebarCollapse.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
     });
 
     function addAssistantMessage(text, type = 'assistant') {
