@@ -244,6 +244,10 @@
         }
 
         try {
+          if (renderedInspectionDetail && window.LabelIQInspectionCache) {
+            await LabelIQInspectionCache.hydrate(renderedInspectionDetail);
+          }
+
           const response = await fetch(form.action, {
             method: 'POST',
             body: new FormData(form),
@@ -254,7 +258,7 @@
             }
           });
           const payload = await response.json().catch(() => ({}));
-          if (!response.ok) throw new Error(payload.error || 'Save failed. Please try again.');
+          if (!response.ok) throw new Error('Could not save on the server. The visible result is still available on this device.');
 
           const formData = new FormData(form);
           const status = formData.get('status') || '';

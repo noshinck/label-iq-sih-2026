@@ -273,6 +273,9 @@ router.get('/legal/inspections/:id', checkPortalAuth('legal'), async (req, res) 
 
 router.post('/legal/checks/:id/verify', checkPortalAuth('legal'), async (req, res) => {
   try {
+    if (!req.body.status) {
+      throw new Error('Choose a verification status before saving.');
+    }
     const check = await inspectionService.verifyCheck({
       checkId: req.params.id,
       officer: req.session.user,
@@ -291,9 +294,9 @@ router.post('/legal/checks/:id/verify', checkPortalAuth('legal'), async (req, re
     return res.redirect(redirectTo);
   } catch (error) {
     if (wantsJson(req)) {
-      return res.status(400).json({ error: error.message || 'Could not save officer verification.' });
+      return res.status(400).json({ error: 'Could not save officer verification. Reopen the inspection result and try again.' });
     }
-    return redirectWithError(res, req.get('referer') || '/legal', error.message);
+    return redirectWithError(res, req.get('referer') || '/legal', 'Could not save officer verification. Reopen the inspection result and try again.');
   }
 });
 
