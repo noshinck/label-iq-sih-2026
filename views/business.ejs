@@ -469,6 +469,7 @@
   <%- include('partials/assistant-widget') %>
 
   <script src="/js/i18n.js"></script>
+  <script src="/js/inspection-cache.js"></script>
   <script>
     const businessProducts = <%- JSON.stringify(data.products).replace(/</g, '\\u003c') %>;
     const portalBtn = document.getElementById('portal-btn');
@@ -616,7 +617,7 @@
       if (!response.ok) throw new Error(job.error || 'Could not read analysis job.');
       renderBusinessJob(job);
       if (job.status === 'COMPLETED') {
-        window.location.href = job.result_url;
+        await LabelIQInspectionCache.openJobResult(job);
         return;
       }
       if (job.status === 'FAILED' || job.status === 'CANCELLED') {

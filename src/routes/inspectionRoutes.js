@@ -5,6 +5,7 @@ const os = require('os');
 const path = require('path');
 const checkPortalAuth = require('../middleware/checkPortalAuth');
 const analysisJobService = require('../services/analysisJobService');
+const inspectionCacheService = require('../services/inspectionCacheService');
 const inspectionService = require('../services/inspectionService');
 const reportService = require('../services/reportService');
 
@@ -58,7 +59,8 @@ function renderInspectionDetail(req, res, { detail, error = null, status = 200 }
     detail,
     error,
     backHref: backHrefForRole(req.session?.user?.role),
-    currentPath: req.originalUrl
+    currentPath: req.originalUrl,
+    missingInspectionId: detail ? null : req.params.id
   });
 }
 
@@ -138,6 +140,16 @@ router.post('/api/analysis/jobs', runUpload, async (req, res) => {
   }
 });
 
+router.post('/api/inspection-cache', async (req, res) => {
+  try {
+    if (!req.session?.user) return res.status(401).json({ error: 'Sign in required.' });
+    const result = await inspectionCacheService.hydrateInspectionDetail(req.body.detail, req.session.user);
+    return res.json({ ok: true, ...result });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
 router.get('/api/analysis/jobs/:id', async (req, res) => {
   if (!req.session?.user) return res.status(401).json({ error: 'Sign in required.' });
   const job = await analysisJobService.getJob(req.params.id);
@@ -147,6 +159,10 @@ router.get('/api/analysis/jobs/:id', async (req, res) => {
   const resultBase = req.session.user.role === 'consumer'
     ? '/scan/inspections'
     : (req.session.user.role === 'business' ? '/business/inspections' : '/legal/inspections');
+  const detail = job.inspection_id && ['COMPLETED', 'FAILED'].includes(job.status)
+    ? await inspectionService.getInspectionDetail(job.inspection_id)
+    : null;
+
   return res.json({
     job_id: job.id,
     inspection_id: job.inspection_id,
@@ -157,7 +173,8 @@ router.get('/api/analysis/jobs/:id', async (req, res) => {
     stages: job.stages,
     timings: job.timings,
     error: job.error,
-    result_url: `${resultBase}/${job.inspection_id}`
+    result_url: `${resultBase}/${job.inspection_id}`,
+    detail
   });
 });
 

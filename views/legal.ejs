@@ -534,6 +534,7 @@
   </button>
 
   <script src="/js/i18n.js"></script>
+  <script src="/js/inspection-cache.js"></script>
   <script>
     const selectedImages = [];
     const selectedImagesBox = document.getElementById('selected-images');
@@ -755,7 +756,7 @@
       }
 
       if (job.status === 'COMPLETED') {
-        window.location.href = job.result_url;
+        await LabelIQInspectionCache.openJobResult(job);
         return;
       }
       if (job.status === 'FAILED' || job.status === 'CANCELLED') {

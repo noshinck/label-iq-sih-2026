@@ -193,6 +193,7 @@
   <%- include('partials/assistant-widget') %>
 
   <script src="/js/i18n.js"></script>
+  <script src="/js/inspection-cache.js"></script>
   <script>
     // File upload logic
     const dropzone = document.getElementById('dropzone');
@@ -281,7 +282,7 @@
       }
 
       if (job.status === 'COMPLETED') {
-        window.location.href = job.result_url;
+        await LabelIQInspectionCache.openJobResult(job);
         return;
       }
       if (job.status === 'FAILED' || job.status === 'CANCELLED') {
