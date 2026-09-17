@@ -22,12 +22,12 @@
 <body class="bg-[#fcfdff] text-slate-700 antialiased font-sans min-h-screen overflow-x-hidden">
   <header class="w-full bg-white border-b border-slate-100 sticky top-0 z-50">
     <div class="px-4 sm:px-6 lg:px-8 min-h-16 py-3 flex flex-wrap items-center justify-between gap-3">
-      <a href="/legal" class="flex items-center">
+      <a href="<%= typeof backHref !== 'undefined' ? backHref : '/legal' %>" class="flex items-center">
         <%- include('partials/brand-logo') %>
       </a>
       <div class="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
         <%- include('partials/language-selector') %>
-        <a href="/legal" data-i18n="action.backOfficer" class="shrink-0 px-3 sm:px-4 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50">Back</a>
+        <a href="<%= typeof backHref !== 'undefined' ? backHref : '/legal' %>" data-i18n="action.backOfficer" class="shrink-0 px-3 sm:px-4 py-2 rounded-lg border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50">Back</a>
       </div>
     </div>
   </header>
@@ -127,7 +127,8 @@
                     </button>
                   </div>
 
-                  <form action="/legal/checks/<%= check.id %>/verify" method="POST" class="mt-4 grid grid-cols-1 md:grid-cols-[160px_minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
+                  <form action="/legal/checks/<%= check.id %>/verify" method="POST" data-verify-check-form class="mt-4 grid grid-cols-1 md:grid-cols-[160px_minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
+                    <input type="hidden" name="returnTo" value="<%= typeof currentPath !== 'undefined' ? currentPath : '' %>" />
                     <select name="status" class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700">
                       <option value="accepted">Accept</option>
                       <option value="edited">Edit</option>
@@ -136,12 +137,11 @@
                     </select>
                     <input name="correctedValue" placeholder="Officer corrected value" class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700" />
                     <input name="remark" placeholder="Remark" class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-700" />
-                    <button class="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold">Save</button>
+                    <button class="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold" data-save-check-button>Save</button>
                   </form>
 
-                  <% if (check.officer_status) { %>
-                    <p class="text-xs text-slate-400 mt-3">Officer: <%= check.officer_status %> <%= check.officer_corrected_value ? `- ${check.officer_corrected_value}` : '' %></p>
-                  <% } %>
+                  <p class="<%= check.officer_status ? '' : 'hidden' %> text-xs text-slate-400 mt-3" data-officer-check-summary>Officer: <span data-officer-check-status><%= check.officer_status || '' %></span><span data-officer-check-value><%= check.officer_corrected_value ? ` - ${check.officer_corrected_value}` : '' %></span></p>
+                  <p class="hidden text-xs font-semibold mt-2" data-verify-check-message></p>
                 </div>
               <% }) %>
             </div>
@@ -186,6 +186,66 @@
     const evidenceCopy = document.getElementById('evidence-copy');
     const evidenceImage = document.getElementById('evidence-image');
     const evidenceBox = document.getElementById('evidence-box');
+
+    document.querySelectorAll('[data-verify-check-form]').forEach((form) => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const button = form.querySelector('[data-save-check-button]');
+        const card = form.closest('.border');
+        const message = card?.querySelector('[data-verify-check-message]');
+        const summary = card?.querySelector('[data-officer-check-summary]');
+        const statusText = card?.querySelector('[data-officer-check-status]');
+        const valueText = card?.querySelector('[data-officer-check-value]');
+        const originalText = button?.textContent || 'Save';
+
+        if (button) {
+          button.disabled = true;
+          button.textContent = 'Saving...';
+          button.classList.add('opacity-70', 'cursor-wait');
+        }
+        if (message) {
+          message.textContent = '';
+          message.className = 'hidden text-xs font-semibold mt-2';
+        }
+
+        try {
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            credentials: 'same-origin',
+            headers: {
+              Accept: 'application/json',
+              'X-Requested-With': 'fetch'
+            }
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload.error || 'Save failed. Please try again.');
+
+          const formData = new FormData(form);
+          const status = formData.get('status') || '';
+          const correctedValue = formData.get('correctedValue') || '';
+          if (summary) summary.classList.remove('hidden');
+          if (statusText) statusText.textContent = status;
+          if (valueText) valueText.textContent = correctedValue ? ` - ${correctedValue}` : '';
+          if (message) {
+            message.textContent = 'Saved';
+            message.className = 'text-xs font-semibold mt-2 text-emerald-600';
+          }
+        } catch (error) {
+          if (message) {
+            message.textContent = error.message || 'Save failed. Please try again.';
+            message.className = 'text-xs font-semibold mt-2 text-red-600';
+          }
+        } finally {
+          if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+            button.classList.remove('opacity-70', 'cursor-wait');
+          }
+        }
+      });
+    });
 
     document.querySelectorAll('.view-evidence').forEach((button) => {
       button.addEventListener('click', () => {

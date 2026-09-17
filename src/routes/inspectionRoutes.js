@@ -43,6 +43,30 @@ function runUpload(req, res, next) {
   });
 }
 
+function wantsJson(req) {
+  return req.xhr || (req.get('accept') || '').includes('application/json');
+}
+
+function backHrefForRole(role) {
+  if (role === 'consumer') return '/scan';
+  if (role === 'business') return '/business';
+  return '/legal';
+}
+
+function renderInspectionDetail(req, res, { detail, error = null, status = 200 }) {
+  return res.status(status).render('inspection-detail', {
+    detail,
+    error,
+    backHref: backHrefForRole(req.session?.user?.role),
+    currentPath: req.originalUrl
+  });
+}
+
+function redirectWithError(res, fallback, message) {
+  const separator = fallback.includes('?') ? '&' : '?';
+  return res.redirect(`${fallback}${separator}error=${encodeURIComponent(message)}`);
+}
+
 router.post('/legal/inspections', checkPortalAuth('legal'), runUpload, async (req, res) => {
   try {
     if (!req.files?.length) throw new Error('Please upload at least one product photo.');
@@ -55,9 +79,10 @@ router.post('/legal/inspections', checkPortalAuth('legal'), runUpload, async (re
 
     res.redirect(`/legal/inspections/${result.inspection.id}`);
   } catch (error) {
-    res.status(400).render('inspection-detail', {
+    renderInspectionDetail(req, res, {
       detail: null,
-      error: error.message
+      error: error.message,
+      status: 400
     });
   }
 });
@@ -79,9 +104,10 @@ router.post('/legal/inspections/analyze-upload', checkPortalAuth('legal'), runUp
     if (created?.inspection?.id) {
       return res.redirect(`/legal/inspections/${created.inspection.id}?error=${encodeURIComponent(error.message)}`);
     }
-    return res.status(400).render('inspection-detail', {
+    return renderInspectionDetail(req, res, {
       detail: null,
-      error: error.message
+      error: error.message,
+      status: 400
     });
   }
 });
@@ -169,23 +195,36 @@ router.post('/scan/analyze-upload', checkPortalAuth('consumer'), runUpload, asyn
     if (created?.inspection?.id) {
       return res.redirect(`/scan/inspections/${created.inspection.id}?error=${encodeURIComponent(error.message)}`);
     }
-    return res.status(400).render('inspection-detail', {
+    return renderInspectionDetail(req, res, {
       detail: null,
-      error: error.message
+      error: error.message,
+      status: 400
     });
   }
 });
 
 router.get('/scan/inspections/:id', checkPortalAuth('consumer'), async (req, res) => {
   const detail = await inspectionService.getInspectionDetail(req.params.id);
-  if (!detail) return res.status(404).send('Inspection not found');
-  return res.render('inspection-detail', { detail, error: req.query.error || null });
+  if (!detail) {
+    return renderInspectionDetail(req, res, {
+      detail: null,
+      error: 'Inspection not found. Please return to the portal and open the result again.',
+      status: 404
+    });
+  }
+  return renderInspectionDetail(req, res, { detail, error: req.query.error || null });
 });
 
 router.get('/business/inspections/:id', checkPortalAuth('business'), async (req, res) => {
   const detail = await inspectionService.getInspectionDetail(req.params.id);
-  if (!detail) return res.status(404).send('Inspection not found');
-  return res.render('inspection-detail', { detail, error: req.query.error || null });
+  if (!detail) {
+    return renderInspectionDetail(req, res, {
+      detail: null,
+      error: 'Inspection not found. Please return to the portal and open the result again.',
+      status: 404
+    });
+  }
+  return renderInspectionDetail(req, res, { detail, error: req.query.error || null });
 });
 
 router.post('/legal/inspections/:id/analyze', checkPortalAuth('legal'), async (req, res) => {
@@ -195,28 +234,50 @@ router.post('/legal/inspections/:id/analyze', checkPortalAuth('legal'), async (r
   } catch (error) {
     await inspectionService.markInspectionError(req.params.id, error);
     const detail = await inspectionService.getInspectionDetail(req.params.id);
-    res.status(500).render('inspection-detail', {
+    renderInspectionDetail(req, res, {
       detail,
-      error: error.message
+      error: error.message,
+      status: 500
     });
   }
 });
 
 router.get('/legal/inspections/:id', checkPortalAuth('legal'), async (req, res) => {
   const detail = await inspectionService.getInspectionDetail(req.params.id);
-  if (!detail) return res.status(404).send('Inspection not found');
-  return res.render('inspection-detail', { detail, error: req.query.error || null });
+  if (!detail) {
+    return renderInspectionDetail(req, res, {
+      detail: null,
+      error: 'Inspection not found. Please return to the officer portal and open the result again.',
+      status: 404
+    });
+  }
+  return renderInspectionDetail(req, res, { detail, error: req.query.error || null });
 });
 
 router.post('/legal/checks/:id/verify', checkPortalAuth('legal'), async (req, res) => {
-  await inspectionService.verifyCheck({
-    checkId: req.params.id,
-    officer: req.session.user,
-    status: req.body.status,
-    correctedValue: req.body.correctedValue,
-    remark: req.body.remark
-  });
-  res.redirect(req.get('referer') || '/legal');
+  try {
+    const check = await inspectionService.verifyCheck({
+      checkId: req.params.id,
+      officer: req.session.user,
+      status: req.body.status,
+      correctedValue: req.body.correctedValue,
+      remark: req.body.remark
+    });
+    const redirectTo = req.body.returnTo || req.get('referer') || `/legal/inspections/${check.inspection_id}`;
+    if (wantsJson(req)) {
+      return res.json({
+        ok: true,
+        check,
+        redirectTo
+      });
+    }
+    return res.redirect(redirectTo);
+  } catch (error) {
+    if (wantsJson(req)) {
+      return res.status(404).json({ error: error.message });
+    }
+    return redirectWithError(res, req.get('referer') || '/legal', error.message);
+  }
 });
 
 router.post('/legal/inspections/:id/finalize', checkPortalAuth('legal'), async (req, res) => {

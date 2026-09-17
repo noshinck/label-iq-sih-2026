@@ -224,8 +224,13 @@ async function verifyCheck({ checkId, officer, status, correctedValue, remark })
     officer_timestamp: new Date().toISOString()
   });
 
+  if (!check) {
+    throw new Error('Inspection check not found.');
+  }
+
   await db.audit('inspection.check_verified', officer, {
     check_id: checkId,
+    inspection_id: check.inspection_id,
     officer_status: status
   });
 
